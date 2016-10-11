@@ -2,8 +2,10 @@ package com.example.phompang.buffetfinder;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,14 +15,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    @Nullable @BindView(R.id.displayName)
+    TextView mDisplayName;
+    @Nullable @BindView(R.id.email)
+    TextView mEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -42,8 +58,14 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Intent i = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(i);
+        View hView = navigationView.getHeaderView(0);
+        mDisplayName = (TextView) hView.findViewById(R.id.displayName);
+        mEmail = (TextView) hView.findViewById(R.id.email);
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            setHeader(intent);
+        }
     }
 
     @Override
@@ -96,10 +118,25 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        } else if (id == R.id.logout) {
+            signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setHeader(Intent intent) {
+        Log.d("displayName", intent.getStringExtra("displayName"));
+        mDisplayName.setText(intent.getStringExtra("displayName"));
+        mEmail.setText(intent.getStringExtra("email"));
+    }
+
+    private void signOut() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
