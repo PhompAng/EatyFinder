@@ -1,4 +1,4 @@
-package com.example.phompang.buffetfinder;
+package com.example.phompang.eatyfinder;
 
 import org.junit.Test;
 

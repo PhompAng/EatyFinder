@@ -5,7 +5,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
     defaultConfig {
-        applicationId "com.example.phompang.buffetfinder"
+        applicationId "com.example.phompang.eatyfinder"
         minSdkVersion 18
         targetSdkVersion 24
         versionCode 1

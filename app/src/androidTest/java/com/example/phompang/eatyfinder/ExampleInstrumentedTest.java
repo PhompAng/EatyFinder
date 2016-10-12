@@ -1,4 +1,4 @@
-package com.example.phompang.buffetfinder;
+package com.example.phompang.eatyfinder;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.phompang.buffetfinder", appContext.getPackageName());
+        assertEquals("com.example.phompang.eatyfinder", appContext.getPackageName());
     }
 }
