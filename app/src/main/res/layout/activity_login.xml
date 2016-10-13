@@ -12,8 +12,16 @@
     tools:context="com.example.phompang.eatyfinder.LoginActivity">
 
     <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
+        android:id="@+id/googleSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/facebookSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/googleSignIn"
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>
