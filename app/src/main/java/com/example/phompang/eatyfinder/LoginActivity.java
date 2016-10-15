@@ -2,13 +2,17 @@ package com.example.phompang.eatyfinder;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -52,6 +56,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     SignInButton mGoogleSignIn;
     @BindView(R.id.facebookSignIn)
     LoginButton mFacebookSignIn;
+    @BindView(R.id.loginAppName)
+    TextView mAppName;
+    @BindView(R.id.loginImgBg)
+    ImageView mBg;
 
     private ProgressDialog mProgressDialog;
 
@@ -64,6 +72,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        Glide.with(this).load(R.drawable.icecream).centerCrop().into(mBg);
+        mAppName.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/monofur_powerline.ttf"));
 
         mGoogleSignIn.setSize(SignInButton.SIZE_WIDE);
         mGoogleSignIn.setOnClickListener(this);
