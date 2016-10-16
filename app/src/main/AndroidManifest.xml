@@ -43,6 +43,9 @@
                 <!--<data android:scheme="@string/fb_login_protocol_scheme" />-->
             <!--</intent-filter>-->
         <!--</activity>-->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="16b86af52f0e3285a2ee7e45ee174fa3cb6def02" />
     </application>
 
 </manifest>

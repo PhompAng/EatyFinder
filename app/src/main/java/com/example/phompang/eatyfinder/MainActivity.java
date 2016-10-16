@@ -21,6 +21,7 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.twitter.sdk.android.Twitter;
 
 import java.util.Random;
 
@@ -146,6 +147,7 @@ public class MainActivity extends AppCompatActivity
     private void signOut() {
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
+        Twitter.logOut();
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();

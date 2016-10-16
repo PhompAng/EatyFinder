@@ -7,5 +7,8 @@
     <string name="facebook_app_id">997491543706076</string>
     <!--<string name="fb_login_protocol_scheme">fb997491543706076</string>-->
 
+    <string name="twitter_consumer_key">REPLACE_ME</string>
+    <string name="twitter_consumer_secret">REPLACE_ME</string>
+
     <string name="action_settings">Settings</string>
 </resources>

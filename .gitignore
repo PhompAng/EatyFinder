@@ -41,3 +41,4 @@ captures/
 *.jks
 
 app/google-services.json
+app/fabric.properties
