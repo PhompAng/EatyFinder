@@ -5,10 +5,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="facebook_app_id">997491543706076</string>
+    <string name="facebook_sign_in_button_text_long">Sign in with Facebook</string>
     <!--<string name="fb_login_protocol_scheme">fb997491543706076</string>-->
 
     <string name="twitter_consumer_key">REPLACE_ME</string>
     <string name="twitter_consumer_secret">REPLACE_ME</string>
+    <string name="twitter_sign_in_button_text_long">Sign in with Twitter</string>
 
     <string name="action_settings">Settings</string>
 </resources>

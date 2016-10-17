@@ -178,7 +178,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
-        showProgressDialog();
+        showProgressDialog(getString(R.string.common_signin_button_text_long));
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -201,7 +201,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void handleFacebookAccessToken(AccessToken accessToken) {
         Log.d(TAG, "handleFacebookAccessToken:" + accessToken);
-        showProgressDialog();
+        showProgressDialog(getString(R.string.facebook_sign_in_button_text_long));
 
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
         mAuth.signInWithCredential(credential)
@@ -229,7 +229,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void handleTwitterSession(TwitterSession session) {
         Log.d(TAG, "handleTwitterSession:" + session);
         // [START_EXCLUDE silent]
-        showProgressDialog();
+        showProgressDialog(getString(R.string.twitter_sign_in_button_text_long));
         // [END_EXCLUDE]
 
         AuthCredential credential = TwitterAuthProvider.getCredential(
@@ -273,10 +273,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-    private void showProgressDialog() {
+    private void showProgressDialog(String provider) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.common_signin_button_text_long));
+            mProgressDialog.setMessage(provider);
             mProgressDialog.setIndeterminate(true);
         }
 
