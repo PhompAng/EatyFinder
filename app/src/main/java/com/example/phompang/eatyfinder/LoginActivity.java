@@ -264,10 +264,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (user != null) {
             Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_LONG).show();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            Log.d("aaaa", user.getDisplayName());
-            intent.putExtra("displayName", user.getDisplayName());
-            intent.putExtra("email", user.getEmail());
             startActivity(intent);
+            finish();
         } else {
             Toast.makeText(this, "     ", Toast.LENGTH_LONG).show();
         }
