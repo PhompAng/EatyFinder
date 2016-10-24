@@ -74,15 +74,15 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
         switch (item.getItemId()) {
             case R.id.action_search:
                 SearchFragment searchFragment = SearchFragment.newInstance("test", "test");
-                fragmentManager.beginTransaction().replace(R.id.flContent, searchFragment).commit();
+                fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.flContent, searchFragment).commit();
                 break;
             case R.id.action_all:
                 AllFragment allFragment = AllFragment.newInstance("test", "test");
-                fragmentManager.beginTransaction().replace(R.id.flContent, allFragment).commit();
+                fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.flContent, allFragment).commit();
                 break;
             case R.id.action_me:
                 MeFragment meFragment = MeFragment.newInstance("test", "test");
-                fragmentManager.beginTransaction().replace(R.id.flContent, meFragment).commit();
+                fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.flContent, meFragment).commit();
                 break;
         }
         return false;
