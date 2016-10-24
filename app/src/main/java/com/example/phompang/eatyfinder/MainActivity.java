@@ -3,7 +3,9 @@ package com.example.phompang.eatyfinder;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -30,7 +32,9 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener, MeFragment.OnLogoutListener, BottomNavigationView.OnNavigationItemSelectedListener {
+
+    @BindView(R.id.bottom_navigation) BottomNavigationView mBottomNavigationView;
 
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mDatabaseReference;
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference();
+
+        mBottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         SearchFragment searchFragment = SearchFragment.newInstance("test", "test");
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -70,5 +76,26 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                SearchFragment searchFragment = SearchFragment.newInstance("test", "test");
+                fragmentManager.beginTransaction().replace(R.id.flContent, searchFragment).commit();
+                break;
+            case R.id.action_me:
+                MeFragment meFragment = MeFragment.newInstance("test", "test");
+                fragmentManager.beginTransaction().replace(R.id.flContent, meFragment).commit();
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public void onLogout() {
+        signOut();
     }
 }

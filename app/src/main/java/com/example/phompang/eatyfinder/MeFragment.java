@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
@@ -16,6 +17,7 @@ import com.twitter.sdk.android.Twitter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -71,7 +73,7 @@ public class MeFragment extends Fragment {
     @BindView(R.id.meEmail)
     TextView mEmail;
     @BindView(R.id.meLogout)
-    TextView mLogout;
+    Button mLogout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,6 +83,11 @@ public class MeFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         return v;
+    }
+
+    @OnClick(R.id.meLogout)
+    public void logout() {
+        mListener.onLogout();
     }
 
     @Override

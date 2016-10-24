@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_favorites"
+        android:id="@+id/action_search"
         android:enabled="true"
         android:icon="@drawable/ic_menu_camera"
         android:title="Search"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_schedules"
+        android:id="@+id/action_all"
         android:enabled="true"
         android:icon="@drawable/ic_menu_share"
         android:title="All"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_music"
+        android:id="@+id/action_me"
         android:enabled="true"
         android:icon="@drawable/ic_menu_gallery"
         android:title="Me"
