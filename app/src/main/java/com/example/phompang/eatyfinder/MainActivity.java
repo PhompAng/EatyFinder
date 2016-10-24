@@ -32,7 +32,7 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener, MeFragment.OnLogoutListener, BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener, AllFragment.OnFragmentInteractionListener, MeFragment.OnLogoutListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.bottom_navigation) BottomNavigationView mBottomNavigationView;
 
@@ -75,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
             case R.id.action_search:
                 SearchFragment searchFragment = SearchFragment.newInstance("test", "test");
                 fragmentManager.beginTransaction().replace(R.id.flContent, searchFragment).commit();
+                break;
+            case R.id.action_all:
+                AllFragment allFragment = AllFragment.newInstance("test", "test");
+                fragmentManager.beginTransaction().replace(R.id.flContent, allFragment).commit();
                 break;
             case R.id.action_me:
                 MeFragment meFragment = MeFragment.newInstance("test", "test");
