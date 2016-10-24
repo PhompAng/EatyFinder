@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.twitter.sdk.android.Twitter;
 
 import butterknife.BindView;
@@ -81,6 +82,12 @@ public class MeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_me, container, false);
         ButterKnife.bind(this, v);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            mName.setText(user.getDisplayName());
+            mEmail.setText(user.getEmail());
+        }
 
         return v;
     }
