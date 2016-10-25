@@ -6,14 +6,24 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.phompang.eatyfinder.adapter.GenreAdapter;
+import com.example.phompang.eatyfinder.model.Genre;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -72,11 +82,30 @@ public class SearchFragment extends Fragment {
         mDatabaseReference = mFirebaseDatabase.getReference();
     }
 
+    @BindView(R.id.genreList)
+    RecyclerView mGenreList;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search, container, false);
+        ButterKnife.bind(this, v);
+
+        ArrayList<Genre> genres = new ArrayList<>();
+        for (int i=0;i<=6;i++) {
+            Genre g = new Genre();
+            g.setPhoto(R.drawable.breakfast);
+            g.setTitle("Breakfast");
+            genres.add(g);
+        }
+
+        mGenreList.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+        mGenreList.setLayoutManager(layoutManager);
+        GenreAdapter adapter = new GenreAdapter(getActivity(), genres);
+        mGenreList.setAdapter(adapter);
+
         return v;
     }
 
