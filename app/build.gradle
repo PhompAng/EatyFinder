@@ -56,7 +56,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.android.support:support-v4:25.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
-    compile 'biz.kasual:materialnumberpicker:1.2.1'
+//    compile 'biz.kasual:materialnumberpicker:1.2.1'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
 }
