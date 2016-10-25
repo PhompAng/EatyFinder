@@ -7,5 +7,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="text_vertical_padding">8dp</dimen>
     <dimen name="text_horizontal_padding">8dp</dimen>
+    <dimen name="card_primary_text_vertical_padding">24dp</dimen>
+    <dimen name="card_primary_text_horizontal_padding">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 </resources>

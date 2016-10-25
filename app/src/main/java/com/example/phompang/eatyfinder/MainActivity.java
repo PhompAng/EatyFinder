@@ -21,12 +21,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.phompang.eatyfinder.model.Party;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.twitter.sdk.android.Twitter;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -47,11 +49,33 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference();
 
+        test();
+
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         SearchFragment searchFragment = SearchFragment.newInstance("test", "test");
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, searchFragment).commit();
+    }
+
+    private void test() {
+        ArrayList<Party> parties = new ArrayList<>();
+        Party p = new Party();
+        p.setTitle("One");
+        p.setPrice(234.11);
+        p.setPhoto(R.drawable.breakfast);
+        parties.add(p);
+
+        Party p1 = new Party();
+        p1.setTitle("Two");
+        p1.setPrice(214.11);
+        p1.setPhoto(R.drawable.breakfast);
+        parties.add(p1);
+
+        for (Party pp: parties) {
+            FirebaseDatabase.getInstance().getReference().child("parties").push().setValue(pp);
+        }
+
     }
 
     private void signOut() {

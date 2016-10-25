@@ -4,11 +4,21 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.phompang.eatyfinder.model.Party;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -32,6 +42,8 @@ public class AllFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private DatabaseReference mDatabaseReference;
 
     public AllFragment() {
         // Required empty public constructor
@@ -62,7 +74,12 @@ public class AllFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
     }
+
+    @BindView(R.id.allList)
+    RecyclerView mAll;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +87,20 @@ public class AllFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_all, container, false);
         ButterKnife.bind(this, v);
+
+        DatabaseReference mRef = mDatabaseReference.child("parties");
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        mAll.setLayoutManager(layoutManager);
+
+        FirebaseRecyclerAdapter<Party, PartyCardViewHolder> adapter = new FirebaseRecyclerAdapter<Party, PartyCardViewHolder>(Party.class, R.layout.party_card_layout, PartyCardViewHolder.class, mRef) {
+            @Override
+            protected void populateViewHolder(PartyCardViewHolder viewHolder, Party model, int position) {
+                viewHolder.mTitle.setText(model.getTitle());
+                viewHolder.mSub.setText(Double.toString(model.getPrice()));
+            }
+        };
+        mAll.setAdapter(adapter);
         return v;
     }
 
@@ -115,5 +146,19 @@ public class AllFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    static class PartyCardViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.partyCardTitle)
+        TextView mTitle;
+        @BindView(R.id.partyCardSub)
+        TextView mSub;
+        @BindView(R.id.partyCardImg)
+        ImageView mImg;
+        public PartyCardViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
     }
 }
