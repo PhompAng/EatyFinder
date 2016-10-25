@@ -9,4 +9,7 @@
     <color name="textSecondary">#757575</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="white">#fff</color>
+    <color name="light_gray">#e5e5e5</color>
+    <color name="light_gray_transparent">#f7e5e5e5</color>
+    <color name="border_color">#95989A</color>
 </resources>
