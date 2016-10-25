@@ -96,8 +96,8 @@ public class AllFragment extends Fragment {
         FirebaseRecyclerAdapter<Party, PartyCardViewHolder> adapter = new FirebaseRecyclerAdapter<Party, PartyCardViewHolder>(Party.class, R.layout.party_card_layout, PartyCardViewHolder.class, mRef) {
             @Override
             protected void populateViewHolder(PartyCardViewHolder viewHolder, Party model, int position) {
-//                viewHolder.mTitle.setText(model.getTitle());
-//                viewHolder.mSub.setText(Double.toString(model.getPrice()));
+                viewHolder.mTitle.setText(model.getTitle());
+                viewHolder.mSub.setText(Double.toString(model.getPrice()));
             }
         };
         mAll.setAdapter(adapter);
