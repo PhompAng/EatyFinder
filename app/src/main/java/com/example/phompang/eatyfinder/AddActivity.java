@@ -89,8 +89,8 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == datetime.time_data.size() - 1) {
-                    DialogFragment timefragment = TimePickerFragment.newInstance();
-                    timefragment.show(getSupportFragmentManager(), "timepicker");
+                    DialogFragment timeFragment = TimePickerFragment.newInstance();
+                    timeFragment.show(getSupportFragmentManager(), "timepicker");
                 } else {
                     datetime.pickTime(position);
                 }
