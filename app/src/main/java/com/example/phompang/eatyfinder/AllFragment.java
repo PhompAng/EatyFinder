@@ -3,6 +3,7 @@ package com.example.phompang.eatyfinder;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import com.example.phompang.eatyfinder.model.Party;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +46,7 @@ public class AllFragment extends Fragment {
 
     private OnAddClickedListener mListener;
 
+    private FirebaseRecyclerAdapter<Party, PartyCardViewHolder> mAdapter;
     private DatabaseReference mDatabaseReference;
 
     public AllFragment() {
@@ -88,22 +91,26 @@ public class AllFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_all, container, false);
         ButterKnife.bind(this, v);
 
-        DatabaseReference mRef = mDatabaseReference.child("parties");
+        return v;
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Query postsQuery = getQuery(mDatabaseReference);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mAll.setLayoutManager(layoutManager);
 
-        FirebaseRecyclerAdapter<Party, PartyCardViewHolder> adapter = new FirebaseRecyclerAdapter<Party, PartyCardViewHolder>(Party.class, R.layout.party_card_layout, PartyCardViewHolder.class, mRef) {
+        mAdapter = new FirebaseRecyclerAdapter<Party, PartyCardViewHolder>(Party.class, R.layout.party_card_layout, PartyCardViewHolder.class, postsQuery) {
             @Override
             protected void populateViewHolder(PartyCardViewHolder viewHolder, Party model, int position) {
                 viewHolder.mTitle.setText(model.getTitle());
                 viewHolder.mSub.setText(Double.toString(model.getPrice()));
             }
         };
-        mAll.setAdapter(adapter);
+        mAll.setAdapter(mAdapter);
 
-
-        return v;
     }
 
     @OnClick(R.id.allAdd)
@@ -136,6 +143,14 @@ public class AllFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mAdapter != null) {
+            mAdapter.cleanup();
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -163,5 +178,9 @@ public class AllFragment extends Fragment {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public Query getQuery(DatabaseReference databaseReference) {
+        return databaseReference.child("parties");
     }
 }
