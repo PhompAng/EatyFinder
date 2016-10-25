@@ -52,6 +52,9 @@
             android:name="io.fabric.ApiKey"
             android:value="16b86af52f0e3285a2ee7e45ee174fa3cb6def02" />
 
+        <activity
+            android:name=".AddActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

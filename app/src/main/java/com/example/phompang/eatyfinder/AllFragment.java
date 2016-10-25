@@ -3,6 +3,7 @@ package com.example.phompang.eatyfinder;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +27,7 @@ import butterknife.OnClick;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AllFragment.OnFragmentInteractionListener} interface
+ * {@link AllFragment.OnAddClickedListener} interface
  * to handle interaction events.
  * Use the {@link AllFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -41,7 +42,7 @@ public class AllFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnAddClickedListener mListener;
 
     private DatabaseReference mDatabaseReference;
 
@@ -80,7 +81,6 @@ public class AllFragment extends Fragment {
 
     @BindView(R.id.allList)
     RecyclerView mAll;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,31 +96,34 @@ public class AllFragment extends Fragment {
         FirebaseRecyclerAdapter<Party, PartyCardViewHolder> adapter = new FirebaseRecyclerAdapter<Party, PartyCardViewHolder>(Party.class, R.layout.party_card_layout, PartyCardViewHolder.class, mRef) {
             @Override
             protected void populateViewHolder(PartyCardViewHolder viewHolder, Party model, int position) {
-                viewHolder.mTitle.setText(model.getTitle());
-                viewHolder.mSub.setText(Double.toString(model.getPrice()));
+//                viewHolder.mTitle.setText(model.getTitle());
+//                viewHolder.mSub.setText(Double.toString(model.getPrice()));
             }
         };
         mAll.setAdapter(adapter);
+
+
         return v;
     }
 
     @OnClick(R.id.allAdd)
     public void add() {
         Toast.makeText(getContext(), "test", Toast.LENGTH_SHORT).show();
+        onClicked();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onClicked() {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onClicked();
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnAddClickedListener) {
+            mListener = (OnAddClickedListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -143,9 +146,9 @@ public class AllFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnAddClickedListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onClicked();
     }
 
     static class PartyCardViewHolder extends RecyclerView.ViewHolder {

@@ -34,7 +34,7 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener, AllFragment.OnFragmentInteractionListener, MeFragment.OnLogoutListener, BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener, AllFragment.OnAddClickedListener, MeFragment.OnLogoutListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.bottom_navigation) BottomNavigationView mBottomNavigationView;
 
@@ -93,5 +93,11 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
     @Override
     public void onLogout() {
         signOut();
+    }
+
+    @Override
+    public void onClicked() {
+        Intent intent = new Intent(MainActivity.this, AddActivity.class);
+        startActivity(intent);
     }
 }
