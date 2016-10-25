@@ -2,6 +2,7 @@ package com.example.phompang.eatyfinder;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,14 +19,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.bumptech.glide.Glide;
+import com.example.phompang.eatyfinder.app.FirebaseUtilities;
 import com.example.phompang.eatyfinder.dialog.DatePickerFragment;
 import com.example.phompang.eatyfinder.dialog.TimePickerFragment;
 import com.example.phompang.eatyfinder.model.Datetime;
+import com.example.phompang.eatyfinder.model.Party;
+import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AddActivity extends AppCompatActivity implements DatePickerFragment.OnSetDateListener, TimePickerFragment.OnSetTimeListener {
+
+    public static final int RESULT_LOAD_IMAGE = 3;
 
     @BindView(R.id.addTitle)
     EditText mTitle;
@@ -49,6 +56,8 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     private ArrayAdapter<String> dateAdapter;
     private ArrayAdapter<String> timeAdapter;
     private Datetime datetime;
+    private Uri selectedImage;
+    private FirebaseUtilities mFirebaseUtilities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         datetime = new Datetime();
+        mFirebaseUtilities = FirebaseUtilities.newInstance();
 
         dateAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, datetime.date_data);
         mDate.setAdapter(dateAdapter);
@@ -102,6 +112,14 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             }
         });
 
+        mImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
+
     }
 
     @Override
@@ -117,6 +135,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
                 finish();
                 return true;
             case R.id.action_add:
+                validate();
                 finish();
                 return true;
         }
@@ -124,9 +143,42 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         return super.onOptionsItemSelected(item);
     }
 
-    private void addParty() {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        switch (requestCode) {
+            case RESULT_LOAD_IMAGE:
+                if (resultCode == Activity.RESULT_OK && null != intent) {
+                    selectedImage = intent.getData();
+                    mImg.setPadding(0,0,0,0);
+                    Glide.with(this).loadFromMediaStore(selectedImage).centerCrop().into(mImg);
+                }
+        }
+    }
+
+    private void validate() {
         String title = mTitle.getText().toString();
         String desc = mDesc.getText().toString();
+        String date = datetime.getDate();
+        String time = datetime.getTime();
+        int currentPeople = Integer.parseInt(mCurrentPeople.getText().toString());
+        int requiredPeople = Integer.parseInt(mRequiredPeople.getText().toString());
+        double price = Double.parseDouble(mPrice.getText().toString());
+        String location = mLocation.getText().toString();
+
+        //TODO validate
+
+        Party p = new Party();
+        p.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        p.setTitle(title);
+        p.setDesc(desc);
+        p.setDate(date);
+        p.setTime(time);
+        p.setCurrentPeople(currentPeople);
+        p.setRequiredPeople(requiredPeople);
+        p.setPrice(price);
+        p.setLocation(location);
+
+        mFirebaseUtilities.addParty(p);
     }
 
     @Override
