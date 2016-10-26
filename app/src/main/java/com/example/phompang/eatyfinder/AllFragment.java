@@ -119,7 +119,7 @@ public class AllFragment extends Fragment {
                     }
                 });
                 viewHolder.mTitle.setText(model.getTitle());
-                viewHolder.mPrice.setText("฿ " + Double.toString(model.getPrice()));
+                viewHolder.mPrice.setText("฿ " + Double.toString(model.getPricePerPerson()));
                 viewHolder.mTime.setText(model.getDate() + " " + model.getTime());
                 viewHolder.mPeople.setText("(" + model.getCurrentPeople() + "/" + model.getRequiredPeople() + " คน)");
                 viewHolder.mDesc.setText(model.getDesc());
