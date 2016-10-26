@@ -2,11 +2,13 @@ package com.example.phompang.eatyfinder.model;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by phompang on 10/25/2016 AD.
  */
 @IgnoreExtraProperties
-public class Party {
+public class Party implements Serializable {
     private String uid;
     private String title;
     private String desc;

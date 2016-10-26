@@ -112,7 +112,7 @@ public class AllFragment extends Fragment {
 
         mAdapter = new FirebaseRecyclerAdapter<Party, PartyCardViewHolder>(Party.class, R.layout.party_card_layout, PartyCardViewHolder.class, postsQuery) {
             @Override
-            protected void populateViewHolder(final PartyCardViewHolder viewHolder, Party model, int position) {
+            protected void populateViewHolder(final PartyCardViewHolder viewHolder, final Party model, int position) {
                 mStorageReference.child("photos/" + model.getPhoto()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -132,6 +132,7 @@ public class AllFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         Intent i = new Intent(getActivity(), PartyDetailActivity.class);
+                        i.putExtra("party", model);
                         startActivity(i);
                     }
                 });
