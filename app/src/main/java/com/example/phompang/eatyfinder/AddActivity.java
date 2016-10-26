@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -53,6 +54,8 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     EditText mTitle;
     @BindView(R.id.addImg)
     ImageView mImg;
+    @BindView(R.id.addImgFab)
+    FloatingActionButton mImgFab;
     @BindView(R.id.addDesc)
     EditText mDesc;
     @BindView(R.id.addDate)
@@ -131,7 +134,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             }
         });
 
-        mImg.setOnClickListener(new View.OnClickListener() {
+        mImgFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

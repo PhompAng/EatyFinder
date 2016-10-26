@@ -8,66 +8,63 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_add">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/addTitleHolder"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/addImg">
-        <EditText
-            android:id="@+id/addTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:lines="1"
-            android:hint="Deal Name"/>
-    </android.support.design.widget.TextInputLayout>
-
     <ImageView
         android:id="@+id/addImg"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:padding="20dp"
-        android:src="@drawable/ic_menu_camera"
-        android:background="@color/dark_gray_transparent"
-        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_camera_alt_black_144dp"
+        android:background="@color/light_gray"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/addDescHolder"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addImgFab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/addTitleHolder"
+        android:tint="@color/white"
+        app:srcCompat="@drawable/ic_menu_camera"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="0.98"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <ImageView
+        android:id="@+id/addDescImg"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:tint="@color/textSecondary"
+        android:src="@drawable/ic_description_black_24dp"
         android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/addImg"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp">
-        <EditText
-            android:id="@+id/addDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:lines="1"
-            android:hint="Description"/>
-    </android.support.design.widget.TextInputLayout>
+        app:layout_constraintBottom_toBottomOf="@+id/addDescHolder"
+        android:layout_marginBottom="16dp" />
+
+    <ImageView
+        android:id="@+id/addDateImg"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:tint="@color/textSecondary"
+        android:src="@drawable/ic_access_time_black_24dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/currentPeopleHolder"
+        android:layout_marginBottom="16dp" />
 
     <Spinner
         android:id="@+id/addDate"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addDescHolder" />
+        app:layout_constraintTop_toBottomOf="@+id/addDescHolder"
+        app:layout_constraintLeft_toRightOf="@+id/addDateImg"
+        style="@android:style/Widget.Material.Spinner.Underlined"
+        android:layout_marginStart="8dp" />
 
     <Spinner
         android:id="@+id/addTime"
@@ -76,16 +73,28 @@
         android:layout_marginStart="8dp"
         app:layout_constraintLeft_toRightOf="@+id/addDate"
         android:layout_marginTop="8dp"
+        style="@android:style/Widget.Material.Spinner.Underlined"
         app:layout_constraintTop_toBottomOf="@+id/addDescHolder" />
+
+    <ImageView
+        android:id="@+id/addPeopleImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@color/textSecondary"
+        android:src="@drawable/ic_person_black_24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/currentPeopleHolder"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/currentPeopleHolder"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         app:layout_constraintTop_toBottomOf="@+id/addDate"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="@dimen/activity_horizontal_margin">
+        app:layout_constraintLeft_toRightOf="@+id/addPeopleImg"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp">
         <EditText
             android:id="@+id/currentPeople"
             android:layout_width="match_parent"
@@ -98,42 +107,16 @@
             tools:layout_editor_absoluteX="0dp" />
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/requiredPeopleHolder"
-        android:layout_width="100dp"
+    <ImageView
+        android:id="@+id/addPriceImg"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/addDate"
-        app:layout_constraintLeft_toRightOf="@+id/currentPeopleHolder">
-        <EditText
-            android:id="@+id/requiredPeople"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:inputType="numberDecimal"
-            android:lines="1"
-            android:hint="Require"/>
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/addPriceHolder"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        app:layout_constraintTop_toBottomOf="@+id/currentPeopleHolder"
+        android:tint="@color/textSecondary"
+        android:src="@drawable/ic_attach_money_black_24dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toLeftOf="@+id/addPricePerPersonHolder">
-
-        <EditText
-            android:id="@+id/addPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="Price before split"
-            android:lines="1"/>
-    </android.support.design.widget.TextInputLayout>
+        app:layout_constraintBottom_toBottomOf="@+id/addPriceHolder"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/addPricePerPersonHolder"
@@ -153,14 +136,25 @@
             android:lines="1"/>
     </android.support.design.widget.TextInputLayout>
 
+    <ImageView
+        android:id="@+id/addLocationImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@color/textSecondary"
+        android:src="@drawable/ic_place_black_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/addLocationHolder"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"/>
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/addLocationHolder"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/addPriceHolder"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/addLocationImg"
         android:layout_marginEnd="16dp"
         app:layout_constraintRight_toRightOf="parent">
         <EditText
@@ -168,6 +162,93 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Location"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/addTitleImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@color/textSecondary"
+        android:src="@drawable/ic_title_black_24px"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/addDescHolder"
+        android:layout_marginBottom="16dp" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/addTitleHolder"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/addImgFab"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/addTitleImg">
+        <EditText
+            android:id="@+id/addTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:lines="1"
+            android:hint="Deal Name"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/addDescHolder"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/addTitleHolder"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/addDescImg"
+        app:layout_constraintRight_toRightOf="parent">
+        <EditText
+            android:id="@+id/addDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:lines="1"
+            android:hint="Description"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/requiredPeopleHolder"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@+id/currentPeopleHolder"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@+id/currentPeopleHolder">
+        <EditText
+            android:id="@+id/requiredPeople"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:inputType="numberDecimal"
+            android:lines="1"
+            android:hint="Require"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/addPriceHolder"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/currentPeopleHolder"
+        app:layout_constraintLeft_toRightOf="@+id/addPriceImg"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toLeftOf="@+id/addPricePerPersonHolder">
+
+        <EditText
+            android:id="@+id/addPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Price before split"
+            android:lines="1"/>
     </android.support.design.widget.TextInputLayout>
 
 
