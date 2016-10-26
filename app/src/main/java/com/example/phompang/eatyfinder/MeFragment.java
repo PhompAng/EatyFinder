@@ -80,8 +80,6 @@ public class MeFragment extends Fragment {
 
     @BindView(R.id.meEmail)
     TextView mEmail;
-    @BindView(R.id.meLogout)
-    Button mLogout;
     @BindView(R.id.toolbarImg)
     ImageView meImg;
 
@@ -93,15 +91,15 @@ public class MeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_me, container, false);
         ButterKnife.bind(this, v);
-
-        collapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsingToolbarLayout);
-
-        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+//
+//        collapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsingToolbarLayout);
+//
+//        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            collapsingToolbarLayout.setTitle(user.getDisplayName());
+//            collapsingToolbarLayout.setTitle(user.getDisplayName());
             Glide.with(this).load(user.getPhotoUrl()).centerCrop().into(meImg);
             mEmail.setText(user.getEmail());
         }
