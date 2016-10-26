@@ -38,7 +38,7 @@ public class PartyDetailActivity extends AppCompatActivity {
     TextView mPeople;
     @BindView(R.id.detailDesc)
     TextView mDesc;
-    @BindView(R.id.detailToolbarImg)
+    @BindView(R.id.toolbarImg)
     ImageView mImg;
 
     private Party mParty;
@@ -55,7 +55,7 @@ public class PartyDetailActivity extends AppCompatActivity {
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle(mParty.getTitle());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detailToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setHomeButtonEnabled(true);

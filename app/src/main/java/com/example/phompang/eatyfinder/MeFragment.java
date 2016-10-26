@@ -82,7 +82,7 @@ public class MeFragment extends Fragment {
     TextView mEmail;
     @BindView(R.id.meLogout)
     Button mLogout;
-    @BindView(R.id.meToolbarImg)
+    @BindView(R.id.toolbarImg)
     ImageView meImg;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -96,7 +96,7 @@ public class MeFragment extends Fragment {
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsingToolbarLayout);
 
-        Toolbar toolbar = (Toolbar) v.findViewById(R.id.meToolbar);
+        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
