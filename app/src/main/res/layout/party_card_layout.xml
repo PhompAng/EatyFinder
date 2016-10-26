@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/partyCardSub"
+        android:id="@+id/partyCardPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="฿399"
@@ -34,15 +34,15 @@
         android:layout_height="wrap_content"
         android:text="Tonight"
         android:layout_marginTop="@dimen/text_vertical_padding"
-        app:layout_constraintTop_toBottomOf="@+id/partyCardSub"
-        app:layout_constraintLeft_toLeftOf="@+id/partyCardSub" />
+        app:layout_constraintTop_toBottomOf="@+id/partyCardPrice"
+        app:layout_constraintLeft_toLeftOf="@+id/partyCardPrice" />
 
     <TextView
         android:id="@+id/partyCardPeople"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="(3/4 คน)"
-        app:layout_constraintTop_toBottomOf="@+id/partyCardSub"
+        app:layout_constraintTop_toBottomOf="@+id/partyCardPrice"
         app:layout_constraintLeft_toRightOf="@+id/partyCardTime"
         android:layout_marginTop="@dimen/text_vertical_padding"
         android:layout_marginLeft="@dimen/text_horizontal_padding"

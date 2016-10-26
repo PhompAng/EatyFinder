@@ -119,7 +119,10 @@ public class AllFragment extends Fragment {
                     }
                 });
                 viewHolder.mTitle.setText(model.getTitle());
-                viewHolder.mSub.setText(Double.toString(model.getPrice()));
+                viewHolder.mPrice.setText("฿ " + Double.toString(model.getPrice()));
+                viewHolder.mTime.setText(model.getDate() + " " + model.getTime());
+                viewHolder.mPeople.setText("(" + model.getCurrentPeople() + "/" + model.getRequiredPeople() + " คน)");
+                viewHolder.mDesc.setText(model.getDesc());
             }
         };
         mAll.setAdapter(mAdapter);
@@ -183,10 +186,16 @@ public class AllFragment extends Fragment {
 
         @BindView(R.id.partyCardTitle)
         TextView mTitle;
-        @BindView(R.id.partyCardSub)
-        TextView mSub;
+        @BindView(R.id.partyCardPrice)
+        TextView mPrice;
         @BindView(R.id.partyCardImg)
         ImageView mImg;
+        @BindView(R.id.partyCardTime)
+        TextView mTime;
+        @BindView(R.id.partyCardPeople)
+        TextView mPeople;
+        @BindView(R.id.partyCardDesc)
+        TextView mDesc;
         public PartyCardViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
