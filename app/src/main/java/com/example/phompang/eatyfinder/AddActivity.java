@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -196,6 +197,28 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         int requiredPeople = Integer.parseInt(mRequiredPeople.getText().toString());
         double price = Double.parseDouble(mPrice.getText().toString());
         String location = mLocation.getText().toString();
+
+        mTitle.setError(null);
+
+        boolean cancel = false;
+        View focusView = null;
+
+        if (TextUtils.isEmpty(title)) {
+            mTitle.setError(getString(R.string.error_field_required));
+            focusView = mTitle;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+//            // perform the user login attempt.
+//            showProgress(true);
+//            checkLogin(email, password);
+        }
 
         //TODO validate
 
