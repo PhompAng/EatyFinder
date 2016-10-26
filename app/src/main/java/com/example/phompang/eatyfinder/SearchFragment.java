@@ -1,6 +1,7 @@
 package com.example.phompang.eatyfinder;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.phompang.eatyfinder.adapter.GenreAdapter;
 import com.example.phompang.eatyfinder.model.Genre;
@@ -82,6 +84,8 @@ public class SearchFragment extends Fragment {
         mDatabaseReference = mFirebaseDatabase.getReference();
     }
 
+    @BindView(R.id.searchAppName)
+    TextView mSearchAppName;
     @BindView(R.id.genreList)
     RecyclerView mGenreList;
 
@@ -105,6 +109,8 @@ public class SearchFragment extends Fragment {
         mGenreList.setLayoutManager(layoutManager);
         GenreAdapter adapter = new GenreAdapter(getActivity(), genres);
         mGenreList.setAdapter(adapter);
+
+        mSearchAppName.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/monofur_powerline.ttf"));
 
         return v;
     }
