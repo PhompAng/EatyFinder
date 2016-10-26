@@ -1,6 +1,7 @@
 package com.example.phompang.eatyfinder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -126,6 +127,14 @@ public class AllFragment extends Fragment {
                 viewHolder.mTime.setText(model.getDate() + " " + model.getTime());
                 viewHolder.mPeople.setText("(" + model.getCurrentPeople() + "/" + model.getRequiredPeople() + " คน)");
                 viewHolder.mDesc.setText(model.getDesc());
+
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(getActivity(), PartyDetailActivity.class);
+                        startActivity(i);
+                    }
+                });
             }
         };
         mAll.setAdapter(mAdapter);
@@ -199,9 +208,11 @@ public class AllFragment extends Fragment {
         TextView mPeople;
         @BindView(R.id.partyCardDesc)
         TextView mDesc;
+        View mView;
         public PartyCardViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            mView = itemView;
         }
     }
 
