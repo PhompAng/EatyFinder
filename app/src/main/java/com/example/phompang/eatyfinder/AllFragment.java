@@ -115,7 +115,10 @@ public class AllFragment extends Fragment {
                 mStorageReference.child("photos/" + model.getPhoto()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Glide.with(getContext()).load(uri).into(viewHolder.mImg);
+                        Context ctx = getContext();
+                        if (ctx != null) {
+                            Glide.with(ctx).load(uri).into(viewHolder.mImg);
+                        }
                     }
                 });
                 viewHolder.mTitle.setText(model.getTitle());

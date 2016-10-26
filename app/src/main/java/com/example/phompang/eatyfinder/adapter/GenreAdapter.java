@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.phompang.eatyfinder.R;
 import com.example.phompang.eatyfinder.model.Genre;
 
@@ -38,8 +39,15 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mImg.setImageResource(genres.get(position).getPhoto());
-        holder.mText.setText(genres.get(position).getTitle());
+        if (genres.get(position) != null) {
+            Glide.with(mContext).load(genres.get(position).getPhoto()).centerCrop().into(holder.mImg);
+            holder.mText.setText(genres.get(position).getTitle());
+        } else {
+            // make sure Glide doesn't load anything into this view until told otherwise
+            Glide.clear(holder.mImg);
+            // remove the placeholder (optional); read comments below
+            holder.mImg.setImageDrawable(null);
+        }
     }
 
     @Override
