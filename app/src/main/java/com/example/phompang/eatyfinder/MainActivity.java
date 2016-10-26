@@ -20,10 +20,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.phompang.eatyfinder.model.Party;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.twitter.sdk.android.Twitter;
@@ -34,7 +39,7 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener, AllFragment.OnAddClickedListener, MeFragment.OnLogoutListener, ProfileEditFragment.OnFragmentInteractionListener, BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener, AllFragment.OnAddClickedListener, MeFragment.OnLogoutListener, ProfileEditFragment.OnProfileEditedListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.bottom_navigation) BottomNavigationView mBottomNavigationView;
 
@@ -80,10 +85,13 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                getSupportFragmentManager().popBackStack();
                 return true;
             case R.id.action_edit:
-                getSupportFragmentManager().beginTransaction().add(R.id.flContent, ProfileEditFragment.newInstance("test", "test")).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_up, R.anim.slide_out_up).add(R.id.flContent, ProfileEditFragment.newInstance("test", "test")).addToBackStack(null).commit();
+                return true;
+            case R.id.action_edit_done:
+                getSupportFragmentManager().popBackStack();
                 return true;
         }
 
@@ -119,5 +127,28 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
     public void onClicked() {
         Intent intent = new Intent(MainActivity.this, AddActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onProfileSave(Bundle b) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String displayName = b.getString("name");
+        Log.d("teset", displayName);
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(displayName)
+                .build();
+
+        if (user != null) {
+            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "Successful", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Unsuccessful", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 }

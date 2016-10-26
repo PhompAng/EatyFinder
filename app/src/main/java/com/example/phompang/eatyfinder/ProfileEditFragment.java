@@ -3,16 +3,31 @@ package com.example.phompang.eatyfinder;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ProfileEditFragment.OnFragmentInteractionListener} interface
+ * {@link ProfileEditFragment.OnProfileEditedListener} interface
  * to handle interaction events.
  * Use the {@link ProfileEditFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -27,7 +42,7 @@ public class ProfileEditFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnProfileEditedListener mListener;
 
     public ProfileEditFragment() {
         // Required empty public constructor
@@ -58,27 +73,63 @@ public class ProfileEditFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setHasOptionsMenu(true);
     }
+
+    @BindView(R.id.toolbarImg)
+    ImageView meImg;
+    @BindView(R.id.meEditName)
+    EditText meName;
+    @BindView(R.id.meEditEmail)
+    EditText meEmail;
+
+    private CollapsingToolbarLayout collapsingToolbarLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_edit, container, false);
+        View v = inflater.inflate(R.layout.fragment_profile_edit, container, false);
+        ButterKnife.bind(this, v);
+
+        collapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsingToolbarLayout);
+
+        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            meName.setText(user.getDisplayName());
+            meEmail.setText(user.getEmail());
+            Glide.with(this).load(user.getPhotoUrl()).centerCrop().into(meImg);
+        }
+
+        return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        menu.clear();
+        inflater.inflate(R.menu.edit,menu);
     }
+//
+//    @OnClick(R.id.meEditSave)
+//    public void onButtonPressed() {
+//        if (mListener != null) {
+//            Bundle b = new Bundle();
+//            b.putString("name", meName.getText().toString());
+//            b.putString("email", meEmail.getText().toString());
+//            mListener.onProfileSave(b);
+//        }
+//    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnProfileEditedListener) {
+            mListener = (OnProfileEditedListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -101,8 +152,7 @@ public class ProfileEditFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public interface OnProfileEditedListener {
+        void onProfileSave(Bundle b);
     }
 }
