@@ -1,62 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    xmlns:card_view="http://schemas.android.com/tools"
-    card_view:cardCornerRadius="2dp"
-    android:layout_marginBottom="8dp">
+    android:background="@color/white">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/partyCardTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cafe Basilico"
+        android:textSize="24sp"
+        android:textColor="@color/textPrimary"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toRightOf="@+id/partyCardImg"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/partyCardTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cafe Basilico"
-            android:textSize="24sp"
-            android:textColor="@color/textPrimary"
-            android:paddingTop="@dimen/card_primary_text_vertical_padding"
-            android:paddingLeft="@dimen/card_primary_text_horizontal_padding"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/partyCardSub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="฿399"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/partyCardTitle"
+        app:layout_constraintLeft_toLeftOf="@+id/partyCardTitle" />
 
-        <TextView
-            android:id="@+id/partyCardSub"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="฿399"
-            android:textSize="14sp"
-            android:layout_marginTop="@dimen/text_vertical_padding"
-            android:paddingLeft="@dimen/card_primary_text_horizontal_padding"
-            app:layout_constraintTop_toBottomOf="@+id/partyCardTitle"
-            card_view:layout_editor_absoluteX="0dp" />
-        
-        <ImageView
-            android:id="@+id/partyCardImg"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/breakfast"
-            android:scaleType="centerCrop"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/partyCardTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tonight"
+        android:layout_marginTop="@dimen/text_vertical_padding"
+        app:layout_constraintTop_toBottomOf="@+id/partyCardSub"
+        app:layout_constraintLeft_toLeftOf="@+id/partyCardSub" />
 
-        <Button
-            android:id="@+id/partyCardBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:textColor="@color/colorAccent"
-            android:text="@string/see_more"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintLeft_toLeftOf="parent" />
+    <TextView
+        android:id="@+id/partyCardPeople"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(3/4)"
+        app:layout_constraintTop_toBottomOf="@+id/partyCardSub"
+        app:layout_constraintLeft_toRightOf="@+id/partyCardTime"
+        android:layout_marginTop="@dimen/text_vertical_padding"
+        android:layout_marginLeft="@dimen/text_horizontal_padding"
+        android:layout_marginStart="@dimen/text_horizontal_padding" />
 
-    </android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/partyCardDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loren ipsum"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-</android.support.v7.widget.CardView>
+    <ImageView
+        android:id="@+id/partyCardImg"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/breakfast"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/colorDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
