@@ -41,7 +41,7 @@
         android:id="@+id/partyCardPeople"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="(3/4)"
+        android:text="(3/4 คน)"
         app:layout_constraintTop_toBottomOf="@+id/partyCardSub"
         app:layout_constraintLeft_toRightOf="@+id/partyCardTime"
         android:layout_marginTop="@dimen/text_vertical_padding"
