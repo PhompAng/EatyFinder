@@ -118,7 +118,7 @@ public class AllFragment extends Fragment {
                     public void onSuccess(Uri uri) {
                         Context ctx = getContext();
                         if (ctx != null) {
-                            Glide.with(ctx).load(uri).into(viewHolder.mImg);
+                            Glide.with(ctx).load(uri).centerCrop().into(viewHolder.mImg);
                         }
                     }
                 });
