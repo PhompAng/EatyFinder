@@ -209,6 +209,35 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             cancel = true;
         }
 
+        if (TextUtils.isEmpty(desc)) {
+            mDesc.setError(getString(R.string.error_field_required));
+            focusView = mDesc;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(mCurrentPeople.getText().toString())) {
+            mCurrentPeople.setError(getString(R.string.error_field_required));
+            focusView = mCurrentPeople;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(mRequiredPeople.getText().toString())) {
+            mRequiredPeople.setError(getString(R.string.error_field_required));
+            focusView = mRequiredPeople;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty((mPrice.getText().toString()))) {
+            mPrice.setError(getString(R.string.error_field_required));
+            focusView = mPrice;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(location)) {
+            mLocation.setError(getString(R.string.error_field_required));
+            focusView = mLocation;
+            cancel = true;
+        }
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
