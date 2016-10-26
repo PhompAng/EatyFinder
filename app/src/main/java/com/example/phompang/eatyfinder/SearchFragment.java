@@ -89,6 +89,8 @@ public class SearchFragment extends Fragment {
     @BindView(R.id.genreList)
     RecyclerView mGenreList;
 
+    private int[] photos = {R.drawable.breakfast, R.drawable.dessert, R.drawable.japanese, R.drawable.pizza};
+    private String[] titles = {"Breakfast", "Dessert", "Japanese", "Pizza"};
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -97,10 +99,10 @@ public class SearchFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         ArrayList<Genre> genres = new ArrayList<>();
-        for (int i=0;i<=6;i++) {
+        for (int i=0;i<=3;i++) {
             Genre g = new Genre();
-            g.setPhoto(R.drawable.breakfast);
-            g.setTitle("Breakfast");
+            g.setPhoto(photos[i]);
+            g.setTitle(titles[i]);
             genres.add(g);
         }
 
