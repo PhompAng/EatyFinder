@@ -3,11 +3,13 @@ package com.example.phompang.eatyfinder;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.phompang.eatyfinder.app.FirebaseUtilities;
@@ -25,7 +28,16 @@ import com.example.phompang.eatyfinder.dialog.DatePickerFragment;
 import com.example.phompang.eatyfinder.dialog.TimePickerFragment;
 import com.example.phompang.eatyfinder.model.Datetime;
 import com.example.phompang.eatyfinder.model.Party;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +70,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     private Datetime datetime;
     private Uri selectedImage;
     private FirebaseUtilities mFirebaseUtilities;
+    private StorageReference folderRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +85,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
 
         datetime = new Datetime();
         mFirebaseUtilities = FirebaseUtilities.newInstance();
+        folderRef = FirebaseStorage.getInstance().getReference();
 
         dateAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, datetime.date_data);
         mDate.setAdapter(dateAdapter);
@@ -155,6 +169,24 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         }
     }
 
+    private void uploadFromFile(Uri file, String uid) {
+        StorageReference imageRef = folderRef.child("photos/" + uid);
+        UploadTask mUploadTask = imageRef.putFile(file);
+
+        mUploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(getApplicationContext(), String.format("Failure: %s", exception.getMessage()), Toast.LENGTH_SHORT).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadUri = taskSnapshot.getMetadata().getDownloadUrl();
+                //Toast.makeText(getApplicationContext(), taskSnapshot.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void validate() {
         String title = mTitle.getText().toString();
         String desc = mDesc.getText().toString();
@@ -167,6 +199,9 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
 
         //TODO validate
 
+        String uid = UUID.randomUUID().toString();
+        uploadFromFile(selectedImage, uid);
+
         Party p = new Party();
         p.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
         p.setTitle(title);
@@ -177,6 +212,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         p.setRequiredPeople(requiredPeople);
         p.setPrice(price);
         p.setLocation(location);
+        p.setPhoto(uid);
 
         mFirebaseUtilities.addParty(p);
     }

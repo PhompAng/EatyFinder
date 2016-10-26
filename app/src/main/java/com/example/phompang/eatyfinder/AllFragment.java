@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.phompang.eatyfinder.model.Party;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +53,7 @@ public class AllFragment extends Fragment {
 
     private FirebaseRecyclerAdapter<Party, PartyCardViewHolder> mAdapter;
     private DatabaseReference mDatabaseReference;
+    private StorageReference mStorageReference;
 
     public AllFragment() {
         // Required empty public constructor
@@ -80,6 +86,7 @@ public class AllFragment extends Fragment {
         }
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mStorageReference = FirebaseStorage.getInstance().getReference();
     }
 
     @BindView(R.id.allList)
@@ -104,7 +111,13 @@ public class AllFragment extends Fragment {
 
         mAdapter = new FirebaseRecyclerAdapter<Party, PartyCardViewHolder>(Party.class, R.layout.party_card_layout, PartyCardViewHolder.class, postsQuery) {
             @Override
-            protected void populateViewHolder(PartyCardViewHolder viewHolder, Party model, int position) {
+            protected void populateViewHolder(final PartyCardViewHolder viewHolder, Party model, int position) {
+                mStorageReference.child("photos/" + model.getPhoto()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Glide.with(getContext()).load(uri).into(viewHolder.mImg);
+                    }
+                });
                 viewHolder.mTitle.setText(model.getTitle());
                 viewHolder.mSub.setText(Double.toString(model.getPrice()));
             }

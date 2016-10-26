@@ -16,6 +16,7 @@ public class Party {
     private int requiredPeople;
     private double price;
     private String location;
+    private String photo;
 
     public String getTitle() {
         return title;
@@ -87,5 +88,13 @@ public class Party {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }
