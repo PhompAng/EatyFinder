@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference();
 
