@@ -151,8 +151,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
                 return true;
             case R.id.action_add:
                 validate();
-                finish();
-                return true;
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -189,84 +188,78 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     }
 
     private void validate() {
-        String title = mTitle.getText().toString();
-        String desc = mDesc.getText().toString();
-        String date = datetime.getDate();
-        String time = datetime.getTime();
-        int currentPeople = Integer.parseInt(mCurrentPeople.getText().toString());
-        int requiredPeople = Integer.parseInt(mRequiredPeople.getText().toString());
-        double price = Double.parseDouble(mPrice.getText().toString());
-        String location = mLocation.getText().toString();
-
         mTitle.setError(null);
+        mDesc.setError(null);
+        mPrice.setError(null);
+        mCurrentPeople.setError(null);
+        mRequiredPeople.setError(null);
+        mLocation.setError(null);
 
         boolean cancel = false;
         View focusView = null;
 
-        if (TextUtils.isEmpty(title)) {
-            mTitle.setError(getString(R.string.error_field_required));
-            focusView = mTitle;
+        if (TextUtils.isEmpty(mLocation.getText().toString())) {
+            mLocation.setError(getString(R.string.error_field_required));
+            focusView = mLocation;
             cancel = true;
         }
-
-        if (TextUtils.isEmpty(desc)) {
-            mDesc.setError(getString(R.string.error_field_required));
-            focusView = mDesc;
-            cancel = true;
-        }
-
-        if (TextUtils.isEmpty(mCurrentPeople.getText().toString())) {
-            mCurrentPeople.setError(getString(R.string.error_field_required));
-            focusView = mCurrentPeople;
-            cancel = true;
-        }
-
-        if (TextUtils.isEmpty(mRequiredPeople.getText().toString())) {
-            mRequiredPeople.setError(getString(R.string.error_field_required));
-            focusView = mRequiredPeople;
-            cancel = true;
-        }
-
         if (TextUtils.isEmpty((mPrice.getText().toString()))) {
             mPrice.setError(getString(R.string.error_field_required));
             focusView = mPrice;
             cancel = true;
         }
-
-        if (TextUtils.isEmpty(location)) {
-            mLocation.setError(getString(R.string.error_field_required));
-            focusView = mLocation;
+        if (TextUtils.isEmpty(mRequiredPeople.getText().toString())) {
+            mRequiredPeople.setError(getString(R.string.error_field_required));
+            focusView = mRequiredPeople;
             cancel = true;
         }
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-//            // perform the user login attempt.
-//            showProgress(true);
-//            checkLogin(email, password);
+        if (TextUtils.isEmpty(mCurrentPeople.getText().toString())) {
+            mCurrentPeople.setError(getString(R.string.error_field_required));
+            focusView = mCurrentPeople;
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(mDesc.getText().toString())) {
+            mDesc.setError(getString(R.string.error_field_required));
+            focusView = mDesc;
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(mTitle.getText().toString())) {
+            mTitle.setError(getString(R.string.error_field_required));
+            focusView = mTitle;
+            cancel = true;
         }
 
-        //TODO validate
+        if (cancel) {
+            focusView.requestFocus();
+        } else {
+//            showProgress(true);
+            String title = mTitle.getText().toString();
+            String desc = mDesc.getText().toString();
+            String date = datetime.getDate();
+            String time = datetime.getTime();
+            int currentPeople = Integer.parseInt(mCurrentPeople.getText().toString());
+            int requiredPeople = Integer.parseInt(mRequiredPeople.getText().toString());
+            double price = Double.parseDouble(mPrice.getText().toString());
+            String location = mLocation.getText().toString();
 
-        String uid = UUID.randomUUID().toString();
-        uploadFromFile(selectedImage, uid);
+            String uid = UUID.randomUUID().toString();
+            uploadFromFile(selectedImage, uid);
 
-        Party p = new Party();
-        p.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        p.setTitle(title);
-        p.setDesc(desc);
-        p.setDate(date);
-        p.setTime(time);
-        p.setCurrentPeople(currentPeople);
-        p.setRequiredPeople(requiredPeople);
-        p.setPrice(price);
-        p.setLocation(location);
-        p.setPhoto(uid);
+            Party p = new Party();
+            p.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            p.setTitle(title);
+            p.setDesc(desc);
+            p.setDate(date);
+            p.setTime(time);
+            p.setCurrentPeople(currentPeople);
+            p.setRequiredPeople(requiredPeople);
+            p.setPrice(price);
+            p.setLocation(location);
+            p.setPhoto(uid);
 
-        mFirebaseUtilities.addParty(p);
+            mFirebaseUtilities.addParty(p);
+            finish();
+        }
     }
 
     @Override
