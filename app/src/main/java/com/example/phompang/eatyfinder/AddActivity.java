@@ -11,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,6 +65,8 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     EditText mRequiredPeople;
     @BindView(R.id.addPrice)
     EditText mPrice;
+    @BindView(R.id.addPricePerPerson)
+    EditText mPricePerPerson;
     @BindView(R.id.addLocation)
     EditText mLocation;
 
@@ -132,6 +136,48 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
+
+        mRequiredPeople.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (!TextUtils.isEmpty(mPrice.getText().toString()) && !TextUtils.isEmpty(mRequiredPeople.getText().toString())) {
+                    Double price = Double.parseDouble(mPrice.getText().toString());
+                    int people = Integer.parseInt(mRequiredPeople.getText().toString());
+                    mPricePerPerson.setText(Double.toString(price/people));
+                }
+            }
+        });
+
+        mPrice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (!TextUtils.isEmpty(mPrice.getText().toString()) && !TextUtils.isEmpty(mRequiredPeople.getText().toString())) {
+                    Double price = Double.parseDouble(mPrice.getText().toString());
+                    int people = Integer.parseInt(mRequiredPeople.getText().toString());
+                    mPricePerPerson.setText(Double.toString(price/people));
+                }
             }
         });
 
@@ -254,6 +300,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             p.setCurrentPeople(currentPeople);
             p.setRequiredPeople(requiredPeople);
             p.setPrice(price);
+            p.setPricePerPerson(price/requiredPeople);
             p.setLocation(location);
             p.setPhoto(uid);
 

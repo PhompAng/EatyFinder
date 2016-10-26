@@ -15,6 +15,7 @@ public class Party {
     private int currentPeople;
     private int requiredPeople;
     private double price;
+    private double pricePerPerson;
     private String location;
     private String photo;
 
@@ -96,5 +97,13 @@ public class Party {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public double getPricePerPerson() {
+        return pricePerPerson;
+    }
+
+    public void setPricePerPerson(double pricePerPerson) {
+        this.pricePerPerson = pricePerPerson;
     }
 }

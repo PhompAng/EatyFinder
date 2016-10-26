@@ -147,8 +147,9 @@
             android:id="@+id/addPricePerPerson"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
+            android:inputType="none"
             android:hint="Price per person"
+            android:focusable="false"
             android:lines="1"/>
     </android.support.design.widget.TextInputLayout>
 
