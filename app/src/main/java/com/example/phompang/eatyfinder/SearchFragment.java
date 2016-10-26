@@ -82,6 +82,7 @@ public class SearchFragment extends Fragment {
         }
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference();
+        setHasOptionsMenu(false);
     }
 
     @BindView(R.id.searchAppName)

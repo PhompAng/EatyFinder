@@ -88,6 +88,7 @@ public class AllFragment extends Fragment {
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mStorageReference = FirebaseStorage.getInstance().getReference();
+        setHasOptionsMenu(false);
     }
 
     @BindView(R.id.allList)

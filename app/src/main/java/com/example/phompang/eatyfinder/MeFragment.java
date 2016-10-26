@@ -4,13 +4,21 @@ package com.example.phompang.eatyfinder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -67,14 +75,17 @@ public class MeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setHasOptionsMenu(true);
     }
 
-    @BindView(R.id.meName)
-    TextView mName;
     @BindView(R.id.meEmail)
     TextView mEmail;
     @BindView(R.id.meLogout)
     Button mLogout;
+    @BindView(R.id.meToolbarImg)
+    ImageView meImg;
+
+    private CollapsingToolbarLayout collapsingToolbarLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,13 +94,24 @@ public class MeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_me, container, false);
         ButterKnife.bind(this, v);
 
+        collapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsingToolbarLayout);
+
+        Toolbar toolbar = (Toolbar) v.findViewById(R.id.meToolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            mName.setText(user.getDisplayName());
+            collapsingToolbarLayout.setTitle(user.getDisplayName());
+            Glide.with(this).load(user.getPhotoUrl()).centerCrop().into(meImg);
             mEmail.setText(user.getEmail());
         }
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @OnClick(R.id.meLogout)

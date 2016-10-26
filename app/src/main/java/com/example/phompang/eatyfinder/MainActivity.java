@@ -34,7 +34,7 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener, AllFragment.OnAddClickedListener, MeFragment.OnLogoutListener, BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener, AllFragment.OnAddClickedListener, MeFragment.OnLogoutListener, ProfileEditFragment.OnFragmentInteractionListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.bottom_navigation) BottomNavigationView mBottomNavigationView;
 
@@ -68,6 +68,26 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_edit:
+                getSupportFragmentManager().beginTransaction().add(R.id.flContent, ProfileEditFragment.newInstance("test", "test")).commit();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
