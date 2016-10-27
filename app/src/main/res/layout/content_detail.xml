@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/detailLocation"
                 android:layout_alignLeft="@id/detailLocation"
-                android:text="Location"/>
+                android:text="Venue Name"/>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

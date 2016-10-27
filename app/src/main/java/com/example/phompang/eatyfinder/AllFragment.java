@@ -219,6 +219,6 @@ public class AllFragment extends Fragment {
     }
 
     public Query getQuery(DatabaseReference databaseReference) {
-        return databaseReference.child("parties");
+        return databaseReference.child("parties").limitToLast(20);
     }
 }
