@@ -85,7 +85,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
 
@@ -264,7 +263,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
-            Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_LONG).show();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
