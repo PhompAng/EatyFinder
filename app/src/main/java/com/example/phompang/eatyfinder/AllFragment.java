@@ -145,7 +145,6 @@ public class AllFragment extends Fragment {
 
     @OnClick(R.id.allAdd)
     public void add() {
-        Toast.makeText(getContext(), "test", Toast.LENGTH_SHORT).show();
         onClicked();
     }
 
