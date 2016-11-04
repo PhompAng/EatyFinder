@@ -306,6 +306,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             p.setPricePerPerson(price/requiredPeople);
             p.setLocation(location);
             p.setPhoto(uid);
+            p.setOwner(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
             mFirebaseUtilities.addParty(p);
             finish();

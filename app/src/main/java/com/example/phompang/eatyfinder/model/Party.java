@@ -20,6 +20,7 @@ public class Party implements Serializable {
     private double pricePerPerson;
     private String location;
     private String photo;
+    private String owner;
 
     public String getTitle() {
         return title;
@@ -107,5 +108,13 @@ public class Party implements Serializable {
 
     public void setPricePerPerson(double pricePerPerson) {
         this.pricePerPerson = pricePerPerson;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }
