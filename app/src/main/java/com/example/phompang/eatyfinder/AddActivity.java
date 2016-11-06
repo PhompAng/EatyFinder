@@ -282,6 +282,11 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             focusView = mTitle;
             cancel = true;
         }
+        if (selectedImage == null) {
+            Toast.makeText(getApplicationContext(), "Please select image", Toast.LENGTH_SHORT).show();
+            focusView = mTitle;
+            cancel = true;
+        }
 
         if (cancel) {
             focusView.requestFocus();
