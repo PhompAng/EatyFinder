@@ -3,16 +3,19 @@ package com.example.phompang.eatyfinder;
 import android.content.Context;
 import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.phompang.eatyfinder.model.Party;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -40,6 +43,8 @@ public class PartyDetailActivity extends AppCompatActivity {
     TextView mDesc;
     @BindView(R.id.toolbarImg)
     ImageView mImg;
+    @BindView(R.id.join)
+    FloatingActionButton mJoin;
 
     private Party mParty;
     private StorageReference mStorageReference;
@@ -63,6 +68,10 @@ public class PartyDetailActivity extends AppCompatActivity {
         mStorageReference = FirebaseStorage.getInstance().getReference();
 
         setData();
+
+        if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(mParty.getOwner())) {
+            mJoin.setVisibility(View.GONE);
+        }
     }
 
     @Override
