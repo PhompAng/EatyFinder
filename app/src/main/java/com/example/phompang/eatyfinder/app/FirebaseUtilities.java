@@ -12,7 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class FirebaseUtilities {
 
-    private static FirebaseUtilities mFirebaseUtilities;
+    private static FirebaseUtilities sFirebaseUtilities;
     private DatabaseReference mDatabaseReference;
 
     private FirebaseUtilities() {
@@ -20,11 +20,11 @@ public class FirebaseUtilities {
     }
 
     public static FirebaseUtilities newInstance() {
-        if (mFirebaseUtilities != null) {
-            return mFirebaseUtilities;
+        if (sFirebaseUtilities != null) {
+            return sFirebaseUtilities;
         }
-        mFirebaseUtilities = new FirebaseUtilities();
-        return mFirebaseUtilities;
+        sFirebaseUtilities = new FirebaseUtilities();
+        return sFirebaseUtilities;
     }
 
     public void addParty(Party p) {
