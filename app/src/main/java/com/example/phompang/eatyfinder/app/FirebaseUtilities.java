@@ -3,6 +3,8 @@ package com.example.phompang.eatyfinder.app;
 import android.os.Bundle;
 
 import com.example.phompang.eatyfinder.model.Party;
+import com.example.phompang.eatyfinder.model.User;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -29,5 +31,9 @@ public class FirebaseUtilities {
 
     public void addParty(Party p) {
         mDatabaseReference.child("parties").push().setValue(p);
+    }
+
+    public void addUser(User u) {
+        mDatabaseReference.child("users").child(u.getUid()).setValue(u);
     }
 }

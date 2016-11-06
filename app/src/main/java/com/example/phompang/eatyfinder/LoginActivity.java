@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.phompang.eatyfinder.app.FirebaseUtilities;
+import com.example.phompang.eatyfinder.model.User;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -66,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseUtilities mFirebaseUtilities;
 
     private CallbackManager mCallbackManager;
 
@@ -100,6 +103,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mGoogleSignIn.setSize(SignInButton.SIZE_WIDE);
         mGoogleSignIn.setOnClickListener(this);
 
+        mFirebaseUtilities = FirebaseUtilities.newInstance();
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -187,13 +191,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-                        hideProgressDialog();
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            addUser();
                         }
                         hideProgressDialog();
                     }
@@ -218,6 +223,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                        } else {
+                            addUser();
                         }
 
                         // [START_EXCLUDE]
@@ -250,6 +257,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                        } else {
+                            addUser();
                         }
 
                         // [START_EXCLUDE]
@@ -259,6 +268,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
+    private void addUser() {
+        if (mAuth.getCurrentUser() != null) {
+            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+            User user = new User();
+            user.setUid(firebaseUser.getUid());
+            user.setDisplayName(firebaseUser.getDisplayName());
+            user.setEmail(firebaseUser.getEmail());
+            user.setProvide(firebaseUser.getProviderId());
+            //Log.d("photo", firebaseUser.getPhotoUrl().toString());
+            user.setPhoto(firebaseUser.getPhotoUrl().toString());
+            mFirebaseUtilities.addUser(user);
+        } else {
+            Log.e("Login", "No user");
+        }
+    }
 
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
