@@ -263,6 +263,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             cancel = true;
         }
         if (TextUtils.isEmpty(mRequiredPeople.getText().toString())) {
+            //TODO check if required less than current
             mRequiredPeople.setError(getString(R.string.error_field_required));
             focusView = mRequiredPeople;
             cancel = true;
