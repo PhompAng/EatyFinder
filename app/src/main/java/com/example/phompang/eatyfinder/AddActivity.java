@@ -32,9 +32,14 @@ import com.example.phompang.eatyfinder.dialog.DatePickerFragment;
 import com.example.phompang.eatyfinder.dialog.TimePickerFragment;
 import com.example.phompang.eatyfinder.model.Datetime;
 import com.example.phompang.eatyfinder.model.Party;
+import com.example.phompang.eatyfinder.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -294,7 +299,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             String uid = UUID.randomUUID().toString();
             uploadFromFile(selectedImage, uid);
 
-            Party p = new Party();
+            final Party p = new Party();
             p.setOwner(FirebaseAuth.getInstance().getCurrentUser().getUid());
             p.setTitle(title);
             p.setDesc(desc);
@@ -306,8 +311,20 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             p.setPricePerPerson(price/requiredPeople);
             p.setLocation(location);
             p.setPhoto(uid);
+            FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User u = dataSnapshot.getValue(User.class);
+                    p.addAttendees(u);
 
-            mFirebaseUtilities.addParty(p);
+                    mFirebaseUtilities.addParty(p);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.w("AddActivity", "getUser:onCancelled", databaseError.toException());
+                }
+            });
             finish();
         }
     }
