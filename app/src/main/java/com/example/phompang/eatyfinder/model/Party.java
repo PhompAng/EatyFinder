@@ -9,7 +9,6 @@ import java.io.Serializable;
  */
 @IgnoreExtraProperties
 public class Party implements Serializable {
-    private String uid;
     private String title;
     private String desc;
     private String date;
@@ -84,14 +83,6 @@ public class Party implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public String getPhoto() {

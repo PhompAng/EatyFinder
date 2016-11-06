@@ -295,7 +295,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             uploadFromFile(selectedImage, uid);
 
             Party p = new Party();
-            p.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            p.setOwner(FirebaseAuth.getInstance().getCurrentUser().getUid());
             p.setTitle(title);
             p.setDesc(desc);
             p.setDate(date);
@@ -306,7 +306,6 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             p.setPricePerPerson(price/requiredPeople);
             p.setLocation(location);
             p.setPhoto(uid);
-            p.setOwner(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
             mFirebaseUtilities.addParty(p);
             finish();
