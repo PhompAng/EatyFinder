@@ -321,9 +321,8 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User u = dataSnapshot.getValue(User.class);
-                    p.addAttendees(u);
 
-                    mFirebaseUtilities.addParty(p);
+                    mFirebaseUtilities.addParty(p, u);
                 }
 
                 @Override

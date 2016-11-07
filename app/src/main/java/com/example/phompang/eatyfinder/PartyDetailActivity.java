@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.phompang.eatyfinder.app.FirebaseUtilities;
 import com.example.phompang.eatyfinder.model.Party;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +24,7 @@ import com.google.firebase.storage.StorageReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PartyDetailActivity extends AppCompatActivity {
 
@@ -49,6 +51,7 @@ public class PartyDetailActivity extends AppCompatActivity {
 
     private Party mParty;
     private StorageReference mStorageReference;
+    private FirebaseUtilities mFirebaseUtilities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class PartyDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mParty = (Party) getIntent().getSerializableExtra("party");
+        Log.d("key", getIntent().getStringExtra("key"));
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle(mParty.getTitle());
@@ -67,6 +71,7 @@ public class PartyDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mStorageReference = FirebaseStorage.getInstance().getReference();
+        mFirebaseUtilities = FirebaseUtilities.newInstance();
 
         setData();
 
@@ -84,6 +89,11 @@ public class PartyDetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.join)
+    public void join() {
+        mFirebaseUtilities.joinParty(getIntent().getStringExtra("key"));
     }
 
     private void setData() {

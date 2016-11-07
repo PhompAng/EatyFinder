@@ -3,8 +3,8 @@ package com.example.phompang.eatyfinder.model;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by phompang on 10/25/2016 AD.
@@ -22,10 +22,10 @@ public class Party implements Serializable {
     private String location;
     private String photo;
     private String owner;
-    private List<User> attendees;
+    private Map<String, User> attendees;
 
     public Party() {
-        this.attendees = new LinkedList<>();
+        this.attendees = new HashMap<>();
     }
 
     public String getTitle() {
@@ -116,15 +116,15 @@ public class Party implements Serializable {
         this.owner = owner;
     }
 
-    public List<User> getAttendees() {
+    public void addAttendees(String key, User u) {
+        this.getAttendees().put(key, u);
+    }
+
+    public Map<String, User> getAttendees() {
         return attendees;
     }
 
-    public void setAttendees(List<User> attendees) {
+    public void setAttendees(Map<String, User> attendees) {
         this.attendees = attendees;
-    }
-
-    public void addAttendees(User u) {
-        this.attendees.add(u);
     }
 }
