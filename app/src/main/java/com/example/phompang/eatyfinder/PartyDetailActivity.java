@@ -75,7 +75,7 @@ public class PartyDetailActivity extends AppCompatActivity {
 
         setData();
 
-        if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(mParty.getOwner())) {
+        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(mParty.getOwner())) {
             mJoin.setVisibility(View.GONE);
         }
     }
