@@ -80,6 +80,7 @@ public class PeoplePickerDialog extends DialogFragment {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Log.d("numberpicker", numberPicker.getValue()+"");
                     mFirebaseUtilities.joinParty(key, numberPicker.getValue());
+                    mFirebaseUtilities.updateCurrentPeople(key, numberPicker.getValue());
                 }
             });
 

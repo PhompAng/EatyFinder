@@ -317,19 +317,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             p.setPricePerPerson(price/requiredPeople);
             p.setLocation(location);
             p.setPhoto(uid);
-            FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    User u = dataSnapshot.getValue(User.class);
-
-                    mFirebaseUtilities.addParty(p, u);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.w("AddActivity", "getUser:onCancelled", databaseError.toException());
-                }
-            });
+            mFirebaseUtilities.addParty(p);
             finish();
         }
     }

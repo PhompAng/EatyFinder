@@ -34,11 +34,10 @@ public class FirebaseUtilities {
         return sFirebaseUtilities;
     }
 
-    public void addParty(Party p, User u) {
+    public void addParty(Party p) {
         DatabaseReference reference = mDatabaseReference.child("parties").push();
         reference.setValue(p);
-        reference.child("attendees").push().setValue(u);
-
+        joinParty(reference.getKey(), p.getCurrentPeople());
     }
 
     public void addUser(User u) {
@@ -62,6 +61,9 @@ public class FirebaseUtilities {
             }
         });
 
+    }
+
+    public void updateCurrentPeople(String key, final int people) {
         mDatabaseReference.child("parties").child(key).child("currentPeople").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
