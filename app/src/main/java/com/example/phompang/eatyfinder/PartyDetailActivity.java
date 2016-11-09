@@ -6,6 +6,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.phompang.eatyfinder.app.FirebaseUtilities;
+import com.example.phompang.eatyfinder.dialog.PeoplePickerDialog;
 import com.example.phompang.eatyfinder.model.Party;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -93,7 +95,11 @@ public class PartyDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.join)
     public void join() {
-        mFirebaseUtilities.joinParty(getIntent().getStringExtra("key"));
+        int maxPeople = mParty.getRequiredPeople() - mParty.getCurrentPeople();
+        DialogFragment dialogFragment = PeoplePickerDialog.newInstance(maxPeople);
+        dialogFragment.show(getSupportFragmentManager(), "people");
+
+        //mFirebaseUtilities.joinParty(getIntent().getStringExtra("key"));
     }
 
     private void setData() {
