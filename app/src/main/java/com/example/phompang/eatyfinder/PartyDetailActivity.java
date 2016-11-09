@@ -96,10 +96,10 @@ public class PartyDetailActivity extends AppCompatActivity {
     @OnClick(R.id.join)
     public void join() {
         int maxPeople = mParty.getRequiredPeople() - mParty.getCurrentPeople();
-        DialogFragment dialogFragment = PeoplePickerDialog.newInstance(maxPeople);
+        DialogFragment dialogFragment = PeoplePickerDialog.newInstance(getIntent().getStringExtra("key"), maxPeople);
         dialogFragment.show(getSupportFragmentManager(), "people");
 
-        //mFirebaseUtilities.joinParty(getIntent().getStringExtra("key"));
+        //mFirebaseUtilities.joinParty();
     }
 
     private void setData() {

@@ -45,13 +45,15 @@ public class FirebaseUtilities {
         mDatabaseReference.child("users").child(u.getUid()).setValue(u);
     }
 
-    public void joinParty(final String key) {
+    public void joinParty(final String key, final int people) {
         mDatabaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                DatabaseReference attendees = mDatabaseReference.child("parties").child(key).child("attendees").push();
                 User u = dataSnapshot.getValue(User.class);
 
-                mDatabaseReference.child("parties").child(key).child("attendees").push().setValue(u);
+                attendees.setValue(u);
+                attendees.child("people").setValue(people);
             }
 
             @Override
@@ -64,7 +66,7 @@ public class FirebaseUtilities {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long currentPeople = (long) dataSnapshot.getValue();
-                currentPeople += 1;
+                currentPeople += people;
                 dataSnapshot.getRef().setValue(currentPeople);
             }
 

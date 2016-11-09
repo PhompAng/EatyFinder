@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
 import com.example.phompang.eatyfinder.R;
+import com.example.phompang.eatyfinder.app.FirebaseUtilities;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,15 +23,20 @@ import butterknife.ButterKnife;
  */
 
 public class PeoplePickerDialog extends DialogFragment {
+    public static final String ARG_KEY = "key";
     public static final String ARG_PEOPLE = "maxPeople";
 
+    private String key;
     private int maxPeople;
+    private FirebaseUtilities mFirebaseUtilities;
 
-    public static DialogFragment newInstance(int maxPeople) {
+    public static DialogFragment newInstance(String key, int maxPeople) {
         PeoplePickerDialog dialog = new PeoplePickerDialog();
         Bundle args = new Bundle();
+        args.putString(ARG_KEY, key);
         args.putInt(ARG_PEOPLE, maxPeople);
         dialog.setArguments(args);
+
         return dialog;
     }
 
@@ -37,8 +44,11 @@ public class PeoplePickerDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            key = getArguments().getString(ARG_KEY);
             maxPeople = getArguments().getInt(ARG_PEOPLE, 0);
         }
+
+        mFirebaseUtilities = FirebaseUtilities.newInstance();
     }
 
     @BindView(R.id.dialogPeople)
@@ -62,13 +72,14 @@ public class PeoplePickerDialog extends DialogFragment {
             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-
+                    PeoplePickerDialog.this.getDialog().cancel();
                 }
             })
             .setPositiveButton("Join", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    PeoplePickerDialog.this.getDialog().cancel();
+                    Log.d("numberpicker", numberPicker.getValue()+"");
+                    mFirebaseUtilities.joinParty(key, numberPicker.getValue());
                 }
             });
 
