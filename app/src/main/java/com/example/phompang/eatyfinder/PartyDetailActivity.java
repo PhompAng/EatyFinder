@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,7 +19,6 @@ import com.example.phompang.eatyfinder.dialog.PeoplePickerDialog;
 import com.example.phompang.eatyfinder.model.Party;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -62,7 +60,6 @@ public class PartyDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mParty = (Party) getIntent().getSerializableExtra("party");
-        Log.d("key", getIntent().getStringExtra("key"));
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle(mParty.getTitle());
@@ -98,8 +95,6 @@ public class PartyDetailActivity extends AppCompatActivity {
         int maxPeople = mParty.getRequiredPeople() - mParty.getCurrentPeople();
         DialogFragment dialogFragment = PeoplePickerDialog.newInstance(getIntent().getStringExtra("key"), maxPeople);
         dialogFragment.show(getSupportFragmentManager(), "people");
-
-        //mFirebaseUtilities.joinParty();
     }
 
     private void setData() {
@@ -120,6 +115,5 @@ public class PartyDetailActivity extends AppCompatActivity {
         mPricePerPerson.setText(Double.toString(mParty.getPricePerPerson()));
         mPeople.setText(mParty.getCurrentPeople() + "/" + mParty.getRequiredPeople() + " คน");
         mDesc.setText(mParty.getDesc());
-        Log.d("attendees", mParty.getAttendees().size() + "");
     }
 }

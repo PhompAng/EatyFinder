@@ -2,27 +2,19 @@ package com.example.phompang.eatyfinder;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.twitter.sdk.android.Twitter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,7 +75,7 @@ public class MeFragment extends Fragment {
     @BindView(R.id.toolbarImg)
     ImageView meImg;
 
-    private CollapsingToolbarLayout collapsingToolbarLayout;
+//    private CollapsingToolbarLayout collapsingToolbarLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

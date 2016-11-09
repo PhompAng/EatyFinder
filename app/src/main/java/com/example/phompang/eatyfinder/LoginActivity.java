@@ -43,7 +43,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import com.google.firebase.auth.TwitterAuthProvider;
-import com.google.firebase.database.FirebaseDatabase;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -175,11 +174,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void signOut() {
-        mAuth.signOut();
-        updateUI(null);
-    }
-
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
@@ -276,7 +270,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             user.setDisplayName(firebaseUser.getDisplayName());
             user.setEmail(firebaseUser.getEmail());
             user.setProvide(firebaseUser.getProviderId());
-            //Log.d("photo", firebaseUser.getPhotoUrl().toString());
             user.setPhoto(firebaseUser.getPhotoUrl().toString());
             mFirebaseUtilities.addUser(user);
         } else {

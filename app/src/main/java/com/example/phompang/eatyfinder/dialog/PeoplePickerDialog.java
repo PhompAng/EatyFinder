@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
@@ -67,7 +66,6 @@ public class PeoplePickerDialog extends DialogFragment {
         numberPicker.setWrapSelectorWheel(true);
 
         builder.setTitle("Select Number of people")
-//            .setMessage("testtest")
             .setView(v)
             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
@@ -78,7 +76,6 @@ public class PeoplePickerDialog extends DialogFragment {
             .setPositiveButton("Join", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    Log.d("numberpicker", numberPicker.getValue()+"");
                     mFirebaseUtilities.joinParty(key, numberPicker.getValue());
                     mFirebaseUtilities.updateCurrentPeople(key, numberPicker.getValue());
                 }
