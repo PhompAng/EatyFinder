@@ -4,19 +4,24 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.phompang.eatyfinder.app.DpiUtils;
 import com.example.phompang.eatyfinder.app.FirebaseUtilities;
 import com.example.phompang.eatyfinder.dialog.PeoplePickerDialog;
 import com.example.phompang.eatyfinder.model.Party;
+import com.example.phompang.eatyfinder.model.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +55,8 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     TextView mPeople;
     @BindView(R.id.detailDesc)
     TextView mDesc;
+    @BindView(R.id.detailAttendeeContainer)
+    LinearLayout mDetailAttendeeContainer;
     @BindView(R.id.toolbarImg)
     ImageView mImg;
     @BindView(R.id.join)
@@ -136,6 +144,31 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         mPricePerPerson.setText(Double.toString(mParty.getPricePerPerson()));
         mPeople.setText(mParty.getCurrentPeople() + "/" + mParty.getRequiredPeople() + " คน");
         mDesc.setText(mParty.getDesc());
+        if (null != mDetailAttendeeContainer && mDetailAttendeeContainer.getChildCount() > 0) {
+            try {
+                mDetailAttendeeContainer.removeViews (0, mDetailAttendeeContainer.getChildCount());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        for (User u: mParty.getAttendees().values()) {
+            int width = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
+            int height = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
+            CircularImageView cv = new CircularImageView(this);
+            cv.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+            Glide.with(this).load(u.getPhoto()).into(cv);
+
+            TextView textView = new TextView(this);
+            textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            if (u.getPeople() > 1) {
+                textView.setText(String.format("+%d", u.getPeople()-1));
+            } else {
+                textView.setText("");
+            }
+            textView.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
+            mDetailAttendeeContainer.addView(cv);
+            mDetailAttendeeContainer.addView(textView);
+        }
     }
 
     @Override

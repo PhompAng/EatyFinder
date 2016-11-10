@@ -15,6 +15,7 @@ public class User implements Serializable {
     private String email;
     private String provide;
     private String photo;
+    private int people;
 
     public String getUid() {
         return uid;
@@ -54,5 +55,13 @@ public class User implements Serializable {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public int getPeople() {
+        return people;
+    }
+
+    public void setPeople(int people) {
+        this.people = people;
     }
 }
