@@ -19,6 +19,11 @@ import com.example.phompang.eatyfinder.dialog.PeoplePickerDialog;
 import com.example.phompang.eatyfinder.model.Party;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -50,6 +55,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     FloatingActionButton mJoin;
 
     private Party mParty;
+    private DatabaseReference mDatabaseReference;
     private StorageReference mStorageReference;
     private FirebaseUtilities mFirebaseUtilities;
 
@@ -71,7 +77,20 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
 
         mStorageReference = FirebaseStorage.getInstance().getReference();
         mFirebaseUtilities = FirebaseUtilities.newInstance();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
+        mDatabaseReference.child("parties").child(getIntent().getStringExtra("key")).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mParty = dataSnapshot.getValue(Party.class);
+                setData();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         setData();
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
