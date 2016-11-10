@@ -105,7 +105,8 @@ public class AllFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         Query postsQuery = getQuery(mDatabaseReference);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        layoutManager.setStackFromEnd(true);
         mAll.setLayoutManager(layoutManager);
 
         mAdapter = new FirebaseRecyclerAdapter<Party, PartyCardViewHolder>(Party.class, R.layout.party_card_layout, PartyCardViewHolder.class, postsQuery) {
