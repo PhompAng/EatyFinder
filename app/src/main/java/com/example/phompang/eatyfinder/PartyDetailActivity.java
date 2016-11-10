@@ -74,7 +74,9 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
 
         setData();
 
-        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(mParty.getOwner())) {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        if (mParty.getAttendees().containsKey(uid)) {
             mJoin.setVisibility(View.GONE);
         }
     }
