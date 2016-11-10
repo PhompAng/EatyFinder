@@ -26,7 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PartyDetailActivity extends AppCompatActivity {
+public class PartyDetailActivity extends AppCompatActivity implements PeoplePickerDialog.OnJoinListener {
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
@@ -115,5 +115,11 @@ public class PartyDetailActivity extends AppCompatActivity {
         mPricePerPerson.setText(Double.toString(mParty.getPricePerPerson()));
         mPeople.setText(mParty.getCurrentPeople() + "/" + mParty.getRequiredPeople() + " คน");
         mDesc.setText(mParty.getDesc());
+    }
+
+    @Override
+    public void onJoin(String key, int people) {
+        mFirebaseUtilities.joinParty(key, people);
+        mFirebaseUtilities.updateCurrentPeople(key, people);
     }
 }

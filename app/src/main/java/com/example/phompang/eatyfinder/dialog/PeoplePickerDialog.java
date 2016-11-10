@@ -29,6 +29,12 @@ public class PeoplePickerDialog extends DialogFragment {
     private int maxPeople;
     private FirebaseUtilities mFirebaseUtilities;
 
+    private OnJoinListener listener;
+
+    public interface OnJoinListener {
+        void onJoin(String key, int people);
+    }
+
     public static DialogFragment newInstance(String key, int maxPeople) {
         PeoplePickerDialog dialog = new PeoplePickerDialog();
         Bundle args = new Bundle();
@@ -60,6 +66,7 @@ public class PeoplePickerDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.dialog_pick_people, null);
         ButterKnife.bind(this, v);
+        listener = (OnJoinListener) getActivity();
 
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(maxPeople);
@@ -76,8 +83,9 @@ public class PeoplePickerDialog extends DialogFragment {
             .setPositiveButton("Join", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    mFirebaseUtilities.joinParty(key, numberPicker.getValue());
-                    mFirebaseUtilities.updateCurrentPeople(key, numberPicker.getValue());
+                    if (listener != null) {
+                        listener.onJoin(key, numberPicker.getValue());
+                    }
                 }
             });
 
