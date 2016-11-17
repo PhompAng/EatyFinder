@@ -23,13 +23,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.phompang.eatyfinder.adapter.VenueAdapter;
 import com.example.phompang.eatyfinder.app.FirebaseUtilities;
+import com.example.phompang.eatyfinder.app.FoursquareUtils;
 import com.example.phompang.eatyfinder.dialog.DatePickerFragment;
 import com.example.phompang.eatyfinder.dialog.TimePickerFragment;
 import com.example.phompang.eatyfinder.model.Datetime;
@@ -48,10 +51,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fi.foyt.foursquare.api.entities.CompactVenue;
+import fi.foyt.foursquare.api.entities.VenuesSearchResult;
 
 public class AddActivity extends AppCompatActivity implements DatePickerFragment.OnSetDateListener, TimePickerFragment.OnSetTimeListener, GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks, LocationListener {
 
@@ -79,12 +85,13 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     @BindView(R.id.addPricePerPerson)
     EditText mPricePerPerson;
     @BindView(R.id.addLocation)
-    EditText mLocation;
+    AutoCompleteTextView mLocation;
 
     private ArrayAdapter<String> dateAdapter;
     private ArrayAdapter<String> timeAdapter;
     private Datetime datetime;
     private Uri selectedImage;
+    private VenuesSearchResult mVenuesSearchResult;
     private FirebaseUtilities mFirebaseUtilities;
     private StorageReference folderRef;
 
@@ -208,6 +215,18 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
                 }
             }
         });
+
+        try {
+            mVenuesSearchResult = new FoursquareUtils().execute("13.7294079,100.7830827").get();
+            CompactVenue[] venues = mVenuesSearchResult.getVenues();
+            VenueAdapter venueAdapter = new VenueAdapter(this, android.R.layout.simple_list_item_1, venues);
+            mLocation.setAdapter(venueAdapter);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

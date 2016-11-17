@@ -13,9 +13,9 @@ import fi.foyt.foursquare.api.entities.VenuesSearchResult;
  * Created by phompang on 11/11/2016 AD.
  */
 
-public class FoursquareUtils extends AsyncTask<String, Integer, Void> {
+public class FoursquareUtils extends AsyncTask<String, Integer, VenuesSearchResult> {
     @Override
-    protected Void doInBackground(String... ll) {
+    protected VenuesSearchResult doInBackground(String... ll) {
         String clientId = "L2IWJVW3MZJ2TVRUIKZXBWD03H12I5THJZ4BVJCIQLFGSPJW";
         String clientSec = "H5JL0RJV2TZ43YLQ30NKRM2JBDWN2D1TMRY4CD2OQN11LRZX";
 
@@ -42,6 +42,6 @@ public class FoursquareUtils extends AsyncTask<String, Integer, Void> {
             Log.e("4sqErr", "  type: " + result.getMeta().getErrorType());
             Log.e("4sqErr", "  detail: " + result.getMeta().getErrorDetail());
         }
-        return null;
+        return result.getResult();
     }
 }

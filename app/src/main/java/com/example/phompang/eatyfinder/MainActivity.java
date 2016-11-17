@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        new FoursquareUtils().execute("13.7294079,100.7830827");
+        //new FoursquareUtils().execute("13.7294079,100.7830827");
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference();
