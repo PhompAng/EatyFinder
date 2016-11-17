@@ -91,7 +91,6 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     private ArrayAdapter<String> timeAdapter;
     private Datetime datetime;
     private Uri selectedImage;
-    private VenuesSearchResult mVenuesSearchResult;
     private FirebaseUtilities mFirebaseUtilities;
     private StorageReference folderRef;
 
@@ -217,8 +216,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         });
 
         try {
-            mVenuesSearchResult = new FoursquareUtils().execute("13.7294079,100.7830827").get();
-            CompactVenue[] venues = mVenuesSearchResult.getVenues();
+            CompactVenue[] venues = FoursquareUtils.venuesSearch("13.7294079,100.7830827");
             VenueAdapter venueAdapter = new VenueAdapter(this, android.R.layout.simple_list_item_1, venues);
             mLocation.setAdapter(venueAdapter);
         } catch (InterruptedException e) {
