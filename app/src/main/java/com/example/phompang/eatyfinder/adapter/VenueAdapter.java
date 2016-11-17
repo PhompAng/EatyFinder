@@ -20,10 +20,12 @@ public class VenueAdapter extends ArrayAdapter<CompactVenue> {
     private Context mContext;
     private CompactVenue[] mCompactVenues;
     private LayoutInflater mInflater;
+    private int mResource;
 
     public VenueAdapter(Context context, int resource, CompactVenue[] objects) {
         super(context, resource, objects);
         this.mContext = context;
+        this.mResource = resource;
         this.mCompactVenues = objects;
     }
 
@@ -42,7 +44,7 @@ public class VenueAdapter extends ArrayAdapter<CompactVenue> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+        View v = mInflater.inflate(mResource, parent, false);
         ((TextView) v.findViewById(android.R.id.text1)).setText(mCompactVenues[position].getName());
         return v;
     }

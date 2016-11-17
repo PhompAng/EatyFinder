@@ -217,7 +217,8 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
 
         try {
             CompactVenue[] venues = FoursquareUtils.venuesSearch("13.7294079,100.7830827");
-            VenueAdapter venueAdapter = new VenueAdapter(this, android.R.layout.simple_list_item_1, venues);
+            VenueAdapter venueAdapter = new VenueAdapter(this, R.layout.support_simple_spinner_dropdown_item, venues);
+            mLocation.setThreshold(1);
             mLocation.setAdapter(venueAdapter);
         } catch (InterruptedException e) {
             e.printStackTrace();
