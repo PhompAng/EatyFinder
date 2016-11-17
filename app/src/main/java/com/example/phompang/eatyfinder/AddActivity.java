@@ -36,6 +36,7 @@ import com.example.phompang.eatyfinder.app.FoursquareUtils;
 import com.example.phompang.eatyfinder.dialog.DatePickerFragment;
 import com.example.phompang.eatyfinder.dialog.TimePickerFragment;
 import com.example.phompang.eatyfinder.model.Datetime;
+import com.example.phompang.eatyfinder.model.MyCompactVenue;
 import com.example.phompang.eatyfinder.model.Party;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -50,6 +51,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -216,10 +218,11 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         });
 
         try {
-            CompactVenue[] venues = FoursquareUtils.venuesSearch("13.7294079,100.7830827");
-            VenueAdapter venueAdapter = new VenueAdapter(this, R.layout.support_simple_spinner_dropdown_item, venues);
+            List<MyCompactVenue> venues = FoursquareUtils.venuesSearch("13.7294079,100.7830827");
+            ArrayAdapter<MyCompactVenue> arrayAdapter = new ArrayAdapter<MyCompactVenue>(this, R.layout.support_simple_spinner_dropdown_item, venues);
+            //VenueAdapter venueAdapter = new VenueAdapter(this, R.layout.support_simple_spinner_dropdown_item, venues);
             mLocation.setThreshold(1);
-            mLocation.setAdapter(venueAdapter);
+            mLocation.setAdapter(arrayAdapter);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

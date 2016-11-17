@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.phompang.eatyfinder.model.MyCompactVenue;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import fi.foyt.foursquare.api.FoursquareApi;
@@ -17,9 +21,13 @@ import fi.foyt.foursquare.api.entities.VenuesSearchResult;
  */
 
 public class FoursquareUtils {
-    public static CompactVenue[] venuesSearch(String ll) throws ExecutionException, InterruptedException {
+    public static List<MyCompactVenue> venuesSearch(String ll) throws ExecutionException, InterruptedException {
         VenuesSearchResult mVenuesSearchResult = new VenuesSearch().execute(ll).get();
-        return mVenuesSearchResult.getVenues();
+        List<MyCompactVenue> result = new ArrayList<>();
+        for (CompactVenue compactVenue: mVenuesSearchResult.getVenues()) {
+            result.add(new MyCompactVenue(compactVenue));
+        }
+        return result;
     }
 
     private static class VenuesSearch extends AsyncTask<String, Intent, VenuesSearchResult> {
