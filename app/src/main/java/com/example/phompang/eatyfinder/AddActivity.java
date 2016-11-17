@@ -50,6 +50,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -88,6 +89,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
 
     private ArrayAdapter<String> dateAdapter;
     private ArrayAdapter<String> timeAdapter;
+    private ArrayAdapter<MyCompactVenue> mVenuesAdapter;
     private Datetime datetime;
     private Uri selectedImage;
     private FirebaseUtilities mFirebaseUtilities;
@@ -96,6 +98,8 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private LocationRequest mLocationRequest;
+
+    private List<MyCompactVenue> mVenues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +115,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         datetime = new Datetime();
         mFirebaseUtilities = FirebaseUtilities.newInstance();
         folderRef = FirebaseStorage.getInstance().getReference();
+        mVenues = new ArrayList<>();
 
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -214,28 +219,16 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             }
         });
 
-        try {
-            List<MyCompactVenue> venues = FoursquareUtils.venuesSearch("13.7294079,100.7830827");
-            ArrayAdapter<MyCompactVenue> arrayAdapter = new ArrayAdapter<MyCompactVenue>(this, R.layout.support_simple_spinner_dropdown_item, venues);
-            //VenueAdapter venueAdapter = new VenueAdapter(this, R.layout.support_simple_spinner_dropdown_item, venues);
-            mLocation.setThreshold(1);
-            mLocation.setAdapter(arrayAdapter);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-
+        mVenuesAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, mVenues);
+        mLocation.setThreshold(1);
+        mVenuesAdapter.setNotifyOnChange(true);
+        mLocation.setAdapter(mVenuesAdapter);
     }
 
     @OnClick(R.id.addGetLocation)
     public void getLocation() {
         if (mLastLocation != null) {
-            Log.d("lattt", String.valueOf(mLastLocation.getLatitude()));
-            Log.d("Longgg", String.valueOf(mLastLocation.getLongitude()));
-        } else {
-            Log.d("aaa", "aaa");
+            handleNewLocation(mLastLocation);
         }
     }
 
@@ -446,12 +439,22 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     }
 
     private void handleNewLocation(Location location) {
-        Log.d("location", location.toString());
+        Log.d("newLocation", location.toString());
+        String ll = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+        try {
+            mVenues = FoursquareUtils.venuesSearch(ll);
+            mVenuesAdapter.clear();
+            mVenuesAdapter.addAll(mVenues);
+            mVenuesAdapter.notifyDataSetChanged();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
+        handleNewLocation(location);
         Log.d("currentLocation", location.toString());
     }
 }
