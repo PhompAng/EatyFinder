@@ -1,18 +1,20 @@
 package com.example.phompang.eatyfinder;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -63,6 +65,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
 
     public static final int RESULT_LOAD_IMAGE = 3;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    public static final int REQUEST_CODE_ASK_PERMISSIONS = 8000;
 
     @BindView(R.id.addTitle)
     EditText mTitle;
@@ -341,35 +344,38 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         if (cancel) {
             focusView.requestFocus();
         } else {
-//            showProgress(true);
-            String title = mTitle.getText().toString();
-            String desc = mDesc.getText().toString();
-            String date = datetime.getDate();
-            String time = datetime.getTime();
-            int currentPeople = Integer.parseInt(mCurrentPeople.getText().toString());
-            int requiredPeople = Integer.parseInt(mRequiredPeople.getText().toString());
-            double price = Double.parseDouble(mPrice.getText().toString());
-            String location = mLocation.getText().toString();
-
-            String uid = UUID.randomUUID().toString();
-            uploadFromFile(selectedImage, uid);
-
-            final Party p = new Party();
-            p.setOwner(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            p.setTitle(title);
-            p.setDesc(desc);
-            p.setDate(date);
-            p.setTime(time);
-            p.setCurrentPeople(currentPeople);
-            p.setRequiredPeople(requiredPeople);
-            p.setPrice(price);
-            p.setPricePerPerson(price/requiredPeople);
-            p.setLocation(location);
-            p.setPhoto(uid);
-            p.setCategory(mCompactVenue.getCategories()[0]);
-            mFirebaseUtilities.addParty(p);
-            finish();
+            addParty();
         }
+    }
+
+    private void addParty() {
+        String title = mTitle.getText().toString();
+        String desc = mDesc.getText().toString();
+        String date = datetime.getDate();
+        String time = datetime.getTime();
+        int currentPeople = Integer.parseInt(mCurrentPeople.getText().toString());
+        int requiredPeople = Integer.parseInt(mRequiredPeople.getText().toString());
+        double price = Double.parseDouble(mPrice.getText().toString());
+        String location = mLocation.getText().toString();
+
+        String uid = UUID.randomUUID().toString();
+        uploadFromFile(selectedImage, uid);
+
+        Party p = new Party();
+        p.setOwner(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        p.setTitle(title);
+        p.setDesc(desc);
+        p.setDate(date);
+        p.setTime(time);
+        p.setCurrentPeople(currentPeople);
+        p.setRequiredPeople(requiredPeople);
+        p.setPrice(price);
+        p.setPricePerPerson(price/requiredPeople);
+        p.setLocation(location);
+        p.setPhoto(uid);
+        p.setCategory(mCompactVenue.getCategories()[0]);
+        mFirebaseUtilities.addParty(p);
+        finish();
     }
 
     @Override
@@ -407,6 +413,24 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                Log.d("permission", grantResults[0] + "");
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    onConnected(null);
+                } else {
+                    Toast.makeText(this, "Need Location Permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         if (connectionResult.hasResolution()) {
             try {
@@ -422,14 +446,9 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(AddActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
             return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
