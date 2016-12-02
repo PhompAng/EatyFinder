@@ -12,15 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.phompang.eatyfinder.adapter.GenreAdapter;
-import com.example.phompang.eatyfinder.model.Genre;
+import com.example.phompang.eatyfinder.adapter.CategoryAdapter;
+import com.example.phompang.eatyfinder.model.Party;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import fi.foyt.foursquare.api.entities.Category;
 
 
 /**
@@ -45,6 +52,8 @@ public class SearchFragment extends Fragment {
 
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mDatabaseReference;
+
+    private Set<Category> categorySet;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -85,8 +94,11 @@ public class SearchFragment extends Fragment {
     @BindView(R.id.genreList)
     RecyclerView mGenreList;
 
-    private int[] photos = {R.drawable.breakfast, R.drawable.dessert, R.drawable.japanese, R.drawable.pizza};
-    private String[] titles = {"Breakfast", "Dessert", "Japanese", "Pizza"};
+    private CategoryAdapter categoryAdapter;
+    private List<Category> categoryList;
+//
+//    private int[] photos = {R.drawable.breakfast, R.drawable.dessert, R.drawable.japanese, R.drawable.pizza};
+//    private String[] titles = {"Breakfast", "Dessert", "Japanese", "Pizza"};
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,23 +106,56 @@ public class SearchFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, v);
 
-        ArrayList<Genre> genres = new ArrayList<>();
-        for (int i=0;i<=3;i++) {
-            Genre g = new Genre();
-            g.setPhoto(photos[i]);
-            g.setTitle(titles[i]);
-            genres.add(g);
-        }
+//        ArrayList<Genre> genres = new ArrayList<>();
+//        for (int i=0;i<=3;i++) {
+//            Genre g = new Genre();
+//            g.setPhoto(photos[i]);
+//            g.setTitle(titles[i]);
+//            genres.add(g);
+//        }
 
         mGenreList.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
         mGenreList.setLayoutManager(layoutManager);
-        GenreAdapter adapter = new GenreAdapter(getActivity(), genres);
-        mGenreList.setAdapter(adapter);
+//        GenreAdapter adapter = new GenreAdapter(getActivity(), genres);
+//        mGenreList.setAdapter(adapter);
 
         mSearchAppName.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/monofur_powerline.ttf"));
 
+        categorySet = new LinkedHashSet<>();
+        categoryList = new ArrayList<>(categorySet);
+        displayCategory();
+        mDatabaseReference.child("parties").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    Category category = snapshot.getValue(Party.class).getCategory();
+                    categorySet.add(category);
+                }
+                categoryList = new ArrayList<>(categorySet);
+                displayCategory();
+
+//                Log.d("category", categorySet.toString());
+//                for (Category category: categorySet) {
+//                    Gson gson = new Gson();
+//                    Icon icon = gson.fromJson(category.getIcon(), Icon.class);
+//                    Log.d("icon", icon.getPrefix());
+//                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         return v;
+    }
+
+    private void displayCategory() {
+        categoryAdapter = new CategoryAdapter(getContext(), categoryList);
+        mGenreList.setAdapter(categoryAdapter);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
