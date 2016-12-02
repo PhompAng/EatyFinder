@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import fi.foyt.foursquare.api.entities.Category;
+
 /**
  * Created by phompang on 10/25/2016 AD.
  */
@@ -23,6 +25,7 @@ public class Party implements Serializable {
     private String photo;
     private String owner;
     private Map<String, User> attendees;
+    private Category category;
 
     public Party() {
         this.attendees = new HashMap<>();
@@ -126,5 +129,13 @@ public class Party implements Serializable {
 
     public void setAttendees(Map<String, User> attendees) {
         this.attendees = attendees;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

@@ -100,6 +100,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     private LocationRequest mLocationRequest;
 
     private List<MyCompactVenue> mVenues;
+    private MyCompactVenue mCompactVenue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +224,13 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         mLocation.setThreshold(1);
         mVenuesAdapter.setNotifyOnChange(true);
         mLocation.setAdapter(mVenuesAdapter);
+
+        mLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mCompactVenue = (MyCompactVenue) adapterView.getItemAtPosition(i);
+            }
+        });
     }
 
     @OnClick(R.id.addGetLocation)
@@ -358,6 +366,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
             p.setPricePerPerson(price/requiredPeople);
             p.setLocation(location);
             p.setPhoto(uid);
+            p.setCategory(mCompactVenue.getCategories()[0]);
             mFirebaseUtilities.addParty(p);
             finish();
         }
