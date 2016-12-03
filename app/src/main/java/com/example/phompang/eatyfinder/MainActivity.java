@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
                 fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.flContent, meFragment).commit();
                 break;
         }
-        return false;
+        return true;
     }
 
     @Override
