@@ -185,7 +185,7 @@ public class SearchFragment extends Fragment implements CategoryAdapter.ViewHold
     @Override
     public void onClick(int position) {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, SearchDetailFragment.newInstance(categoryList.get(position).getName())).commit();
+        fragmentManager.beginTransaction().replace(R.id.flContent, SearchDetailFragment.newInstance(categoryList.get(position).getName())).addToBackStack(null).commit();
     }
 
     /**
