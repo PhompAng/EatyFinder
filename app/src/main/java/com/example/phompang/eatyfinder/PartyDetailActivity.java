@@ -41,26 +41,26 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
-    @BindView(R.id.detailDate)
+    @BindView(R.id.date)
     TextView mDate;
-    @BindView(R.id.detailTime)
+    @BindView(R.id.time)
     TextView mTime;
-    @BindView(R.id.detailLocation)
+    @BindView(R.id.location)
     TextView mLocation;
-    @BindView(R.id.detailPrice)
+    @BindView(R.id.price)
     TextView mPrice;
-    @BindView(R.id.detailPricePerPerson)
+    @BindView(R.id.pricePerPerson)
     TextView mPricePerPerson;
-    @BindView(R.id.detailPeople)
+    @BindView(R.id.people)
     TextView mPeople;
-    @BindView(R.id.detailDesc)
+    @BindView(R.id.desc)
     TextView mDesc;
     @BindView(R.id.seeMoreText)
     TextView mSeeMoreText;
     @BindView(R.id.seeMore)
     ImageView mSeeMore;
-    @BindView(R.id.detailAttendeeContainer)
-    LinearLayout mDetailAttendeeContainer;
+    @BindView(R.id.attendeeContainer)
+    LinearLayout mAttendeeContainer;
     @BindView(R.id.toolbarImg)
     ImageView mImg;
     @BindView(R.id.join)
@@ -168,9 +168,9 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         mPricePerPerson.setText(Double.toString(mParty.getPricePerPerson()));
         mPeople.setText(mParty.getCurrentPeople() + "/" + mParty.getRequiredPeople() + " คน");
         mDesc.setText(mParty.getDesc());
-        if (null != mDetailAttendeeContainer && mDetailAttendeeContainer.getChildCount() > 0) {
+        if (null != mAttendeeContainer && mAttendeeContainer.getChildCount() > 0) {
             try {
-                mDetailAttendeeContainer.removeViews (0, mDetailAttendeeContainer.getChildCount());
+                mAttendeeContainer.removeViews (0, mAttendeeContainer.getChildCount());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -190,8 +190,8 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
                 textView.setText("");
             }
             textView.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
-            mDetailAttendeeContainer.addView(cv);
-            mDetailAttendeeContainer.addView(textView);
+            mAttendeeContainer.addView(cv);
+            mAttendeeContainer.addView(textView);
         }
     }
 
