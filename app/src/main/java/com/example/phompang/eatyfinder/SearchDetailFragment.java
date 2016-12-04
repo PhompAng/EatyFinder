@@ -8,12 +8,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.bumptech.glide.Glide;
+import com.example.phompang.eatyfinder.Interface.CategorySearchStrategy;
+import com.example.phompang.eatyfinder.Interface.SearchStrategy;
+import com.example.phompang.eatyfinder.Interface.TitleSearchStrategy;
 import com.example.phompang.eatyfinder.model.Party;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,6 +50,8 @@ public class SearchDetailFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private SearchStrategy strategy;
+
     public SearchDetailFragment() {
         // Required empty public constructor
     }
@@ -70,6 +77,9 @@ public class SearchDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
+            strategy = new CategorySearchStrategy();
+        } else {
+            strategy = new TitleSearchStrategy();
         }
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mStorageReference = FirebaseStorage.getInstance().getReference();
@@ -87,12 +97,61 @@ public class SearchDetailFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         mSearchbar.setText(mParam1);
+        mSearchbar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                strategy = new TitleSearchStrategy();
+                mParam1 = editable.toString();
+                postsQuery = getQuery(mDatabaseReference);
+                mAdapter = new FirebaseRecyclerAdapter<Party, AllFragment.PartyCardViewHolder>(Party.class, R.layout.party_card_layout, AllFragment.PartyCardViewHolder.class, postsQuery) {
+                    @Override
+                    protected void populateViewHolder(final AllFragment.PartyCardViewHolder viewHolder, final Party model, final int position) {
+                        mStorageReference.child("photos/" + model.getPhoto()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Context ctx = getContext();
+                                if (ctx != null) {
+                                    Glide.with(ctx).load(uri).centerCrop().into(viewHolder.mImg);
+                                }
+                            }
+                        });
+                        viewHolder.mTitle.setText(model.getTitle());
+                        viewHolder.mPrice.setText(String.format("฿ %s", Double.toString(model.getPricePerPerson())));
+                        viewHolder.mTime.setText(model.getDate() + " " + model.getTime());
+                        viewHolder.mPeople.setText("(" + model.getCurrentPeople() + "/" + model.getRequiredPeople() + " คน)");
+                        viewHolder.mDesc.setText(model.getDesc());
+
+                        viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent i = new Intent(getActivity(), PartyDetailActivity.class);
+                                i.putExtra("party", model);
+                                i.putExtra("key", mAdapter.getRef(position).getKey());
+                                startActivity(i);
+                            }
+                        });
+                    }
+                };
+                mList.setAdapter(mAdapter);
+            }
+        });
 
         return v;
     }
 
 
     private FirebaseRecyclerAdapter<Party, AllFragment.PartyCardViewHolder> mAdapter;
+    private Query postsQuery;
     private DatabaseReference mDatabaseReference;
     private StorageReference mStorageReference;
 
@@ -100,7 +159,7 @@ public class SearchDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Query postsQuery = getQuery(mDatabaseReference);
+        postsQuery = getQuery(mDatabaseReference);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
         layoutManager.setStackFromEnd(true);
         mList.setLayoutManager(layoutManager);
@@ -177,6 +236,6 @@ public class SearchDetailFragment extends Fragment {
     }
 
     public Query getQuery(DatabaseReference databaseReference) {
-        return databaseReference.child("parties").orderByChild("category/name").equalTo(mParam1).limitToLast(20);
+        return strategy.search(databaseReference, mParam1);
     }
 }
