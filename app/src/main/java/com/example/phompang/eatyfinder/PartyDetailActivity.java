@@ -2,13 +2,14 @@ package com.example.phompang.eatyfinder;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,10 +139,12 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
             seeMoreState = true;
             mSeeMoreText.setText("See Less");
             mSeeMore.setImageResource(R.drawable.ic_expand_less_black_24dp);
+            setAttendee(seeMoreState);
         } else {
             seeMoreState = false;
             mSeeMoreText.setText("See More");
             mSeeMore.setImageResource(R.drawable.ic_expand_more_black_24dp);
+            setAttendee(seeMoreState);
         }
     }
 
@@ -168,6 +171,11 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         mPricePerPerson.setText(Double.toString(mParty.getPricePerPerson()));
         mPeople.setText(mParty.getCurrentPeople() + "/" + mParty.getRequiredPeople() + " คน");
         mDesc.setText(mParty.getDesc());
+
+        setAttendee(seeMoreState);
+    }
+
+    public void setAttendee(boolean state) {
         if (null != mAttendeeContainer && mAttendeeContainer.getChildCount() > 0) {
             try {
                 mAttendeeContainer.removeViews (0, mAttendeeContainer.getChildCount());
@@ -175,23 +183,59 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
                 e.printStackTrace();
             }
         }
-        for (User u: mParty.getAttendees().values()) {
-            int width = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
-            int height = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
-            CircularImageView cv = new CircularImageView(this);
-            cv.setLayoutParams(new LinearLayout.LayoutParams(width, height));
-            Glide.with(this).load(u.getPhoto()).into(cv);
+        int width = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
+        int height = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
+        if (!state) {
+            mAttendeeContainer.setOrientation(LinearLayout.HORIZONTAL);
+            for (User u : mParty.getAttendees().values()) {
+                CircularImageView cv = new CircularImageView(this);
+                cv.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+                Glide.with(this).load(u.getPhoto()).into(cv);
 
-            TextView textView = new TextView(this);
-            textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            if (u.getPeople() > 1) {
-                textView.setText(String.format("+%d", u.getPeople()-1));
-            } else {
-                textView.setText("");
+                TextView textView = new TextView(this);
+                textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                if (u.getPeople() > 1) {
+                    textView.setText(String.format("+%d", u.getPeople() - 1));
+                } else {
+                    textView.setText("");
+                }
+                textView.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
+                mAttendeeContainer.addView(cv);
+                mAttendeeContainer.addView(textView);
             }
-            textView.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
-            mAttendeeContainer.addView(cv);
-            mAttendeeContainer.addView(textView);
+        } else {
+            mAttendeeContainer.setOrientation(LinearLayout.VERTICAL);
+            for (User u: mParty.getAttendees().values()) {
+                LinearLayout linearLayout = new LinearLayout(this);
+                linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                CircularImageView cv = new CircularImageView(this);
+                cv.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+                Glide.with(this).load(u.getPhoto()).into(cv);
+
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.gravity = Gravity.CENTER_VERTICAL;
+
+                TextView textView = new TextView(this);
+                textView.setLayoutParams(layoutParams);
+                textView.setText(u.getDisplayName());
+                textView.setTextColor(ContextCompat.getColor(this, R.color.textPrimary));
+
+                TextView textView1 = new TextView(this);
+                textView1.setLayoutParams(layoutParams);
+                if (u.getPeople() > 1) {
+                    textView1.setText(String.format(" with %d friends", u.getPeople() - 1));
+                } else {
+                    textView1.setText("");
+                }
+
+                linearLayout.addView(cv);
+                linearLayout.addView(textView);
+                linearLayout.addView(textView1);
+
+                mAttendeeContainer.addView(linearLayout);
+            }
         }
     }
 
