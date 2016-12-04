@@ -2,7 +2,6 @@ package com.example.phompang.eatyfinder.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +46,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         if (categories.get(position) != null) {
             Gson gson = new Gson();
             Icon icon = gson.fromJson(categories.get(position).getIcon(), Icon.class);
-            Log.d("icon", icon.getPrefix() + "88" + icon.getSuffix());
             Glide.with(mContext).load(icon.getPrefix() + "88" + icon.getSuffix()).centerCrop().into(holder.mImg);
             holder.mText.setText(categories.get(position).getName());
         } else {
