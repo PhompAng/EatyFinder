@@ -135,7 +135,7 @@ public class SearchFragment extends Fragment implements CategoryAdapter.ViewHold
         categorySet = new LinkedHashSet<>();
         categoryList = new ArrayList<>(categorySet);
         displayCategory();
-        mDatabaseReference.child("parties").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReference.child("parties").limitToLast(6).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
