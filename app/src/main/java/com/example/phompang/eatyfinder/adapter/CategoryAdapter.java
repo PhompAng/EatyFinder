@@ -28,16 +28,18 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     private List<Category> categories;
     private Context mContext;
+    private ViewHolder.OnClickListener listener;
 
-    public CategoryAdapter(Context context, List<Category> categories) {
+    public CategoryAdapter(Context context, List<Category> categories, ViewHolder.OnClickListener listener) {
         this.categories = categories;
         this.mContext = context;
+        this.listener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.category_layout, parent, false);
-        return new ViewHolder(v);
+        return new ViewHolder(v, listener);
     }
 
     @Override
@@ -61,14 +63,31 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         return categories.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        OnClickListener listener;
+
         @BindView(R.id.categoryImg)
         ImageView mImg;
         @BindView(R.id.categoryText)
         TextView mText;
-        ViewHolder(View itemView) {
+        ViewHolder(View itemView, OnClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            this.listener = listener;
+            itemView.setOnClickListener(this);
+        }
+
+        public interface OnClickListener {
+            void onClick(int position);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (listener != null) {
+                listener.onClick(getAdapterPosition());
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,7 +39,7 @@ import fi.foyt.foursquare.api.entities.Category;
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements CategoryAdapter.ViewHolder.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -92,7 +93,7 @@ public class SearchFragment extends Fragment {
     @BindView(R.id.searchAppName)
     TextView mSearchAppName;
     @BindView(R.id.genreList)
-    RecyclerView mGenreList;
+    RecyclerView mCategoryList;
 
     private CategoryAdapter categoryAdapter;
     private List<Category> categoryList;
@@ -114,11 +115,11 @@ public class SearchFragment extends Fragment {
 //            genres.add(g);
 //        }
 
-        mGenreList.setHasFixedSize(true);
+        mCategoryList.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
-        mGenreList.setLayoutManager(layoutManager);
+        mCategoryList.setLayoutManager(layoutManager);
 //        GenreAdapter adapter = new GenreAdapter(getActivity(), genres);
-//        mGenreList.setAdapter(adapter);
+//        mCategoryList.setAdapter(adapter);
 
         mSearchAppName.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/monofur_powerline.ttf"));
 
@@ -149,13 +150,12 @@ public class SearchFragment extends Fragment {
             }
         });
 
-
         return v;
     }
 
     private void displayCategory() {
-        categoryAdapter = new CategoryAdapter(getContext(), categoryList);
-        mGenreList.setAdapter(categoryAdapter);
+        categoryAdapter = new CategoryAdapter(getContext(), categoryList, this);
+        mCategoryList.setAdapter(categoryAdapter);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -180,6 +180,12 @@ public class SearchFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(int position) {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, SearchDetailFragment.newInstance(categoryList.get(position).getName())).commit();
     }
 
     /**
