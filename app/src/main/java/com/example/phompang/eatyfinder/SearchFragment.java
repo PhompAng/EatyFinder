@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.phompang.eatyfinder.adapter.CategoryAdapter;
@@ -28,6 +29,7 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import fi.foyt.foursquare.api.entities.Category;
 
 
@@ -92,6 +94,8 @@ public class SearchFragment extends Fragment implements CategoryAdapter.ViewHold
 
     @BindView(R.id.searchAppName)
     TextView mSearchAppName;
+    @BindView(R.id.searchBar)
+    EditText mSearchBar;
     @BindView(R.id.genreList)
     RecyclerView mCategoryList;
 
@@ -151,6 +155,12 @@ public class SearchFragment extends Fragment implements CategoryAdapter.ViewHold
         });
 
         return v;
+    }
+
+    @OnClick(R.id.searchBar)
+    public void onSearchClick() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, SearchDetailFragment.newInstance(null)).addToBackStack(null).commit();
     }
 
     private void displayCategory() {
