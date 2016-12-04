@@ -55,6 +55,10 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     TextView mPeople;
     @BindView(R.id.detailDesc)
     TextView mDesc;
+    @BindView(R.id.seeMoreText)
+    TextView mSeeMoreText;
+    @BindView(R.id.seeMore)
+    ImageView mSeeMore;
     @BindView(R.id.detailAttendeeContainer)
     LinearLayout mDetailAttendeeContainer;
     @BindView(R.id.toolbarImg)
@@ -66,6 +70,8 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     private DatabaseReference mDatabaseReference;
     private StorageReference mStorageReference;
     private FirebaseUtilities mFirebaseUtilities;
+
+    private boolean seeMoreState = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +130,24 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         int maxPeople = mParty.getRequiredPeople() - mParty.getCurrentPeople();
         DialogFragment dialogFragment = PeoplePickerDialog.newInstance(getIntent().getStringExtra("key"), maxPeople);
         dialogFragment.show(getSupportFragmentManager(), "people");
+    }
+
+    @OnClick(R.id.seeMore)
+    public void seeMoreClick() {
+        if (!seeMoreState) {
+            seeMoreState = true;
+            mSeeMoreText.setText("See Less");
+            mSeeMore.setImageResource(R.drawable.ic_expand_less_black_24dp);
+        } else {
+            seeMoreState = false;
+            mSeeMoreText.setText("See More");
+            mSeeMore.setImageResource(R.drawable.ic_expand_more_black_24dp);
+        }
+    }
+
+    @OnClick(R.id.seeMoreText)
+    public void seeMoreTextClick() {
+        seeMoreClick();
     }
 
     private void setData() {
