@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.phompang.eatyfinder.adapter.CategoryAdapter;
 import com.example.phompang.eatyfinder.model.Party;
 import com.google.firebase.database.DataSnapshot;
@@ -94,6 +96,8 @@ public class SearchFragment extends Fragment implements CategoryAdapter.ViewHold
 
     @BindView(R.id.searchAppName)
     TextView mSearchAppName;
+    @BindView(R.id.searchBg)
+    ImageView mSearchBg;
     @BindView(R.id.searchBar)
     EditText mSearchBar;
     @BindView(R.id.genreList)
@@ -126,6 +130,7 @@ public class SearchFragment extends Fragment implements CategoryAdapter.ViewHold
 //        mCategoryList.setAdapter(adapter);
 
         mSearchAppName.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/monofur_powerline.ttf"));
+        Glide.with(this).load(R.drawable.breakfast).centerCrop().into(mSearchBg);
 
         categorySet = new LinkedHashSet<>();
         categoryList = new ArrayList<>(categorySet);

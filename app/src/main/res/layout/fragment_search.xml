@@ -10,7 +10,6 @@
         android:layout_width="450dp"
         android:layout_height="330dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/breakfast"
         android:layout_gravity="center|top"/>
 
     <View
