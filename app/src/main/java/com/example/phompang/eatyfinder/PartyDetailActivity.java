@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -155,6 +156,10 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
             mJoin.setImageResource(R.drawable.ic_mode_edit_white_24dp);
         } else if (mParty.getAttendees().containsKey(uid)) {
             update = true;
+        } else {
+            if (mParty.getRequiredPeople() == mParty.getCurrentPeople()) {
+                mJoin.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -197,6 +202,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
             } else {
                 maxPeople = mParty.getRequiredPeople() - mParty.getCurrentPeople();
             }
+            Log.d("maxPeople", maxPeople + "");
             DialogFragment dialogFragment = PeoplePickerDialog.newInstance(key, maxPeople);
             dialogFragment.show(getSupportFragmentManager(), "people");
         }
