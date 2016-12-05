@@ -2,7 +2,6 @@ package com.example.phompang.eatyfinder;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.phompang.eatyfinder.model.Party;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -112,15 +111,18 @@ public class AllFragment extends Fragment {
         mAdapter = new FirebaseRecyclerAdapter<Party, PartyCardViewHolder>(Party.class, R.layout.party_card_layout, PartyCardViewHolder.class, postsQuery) {
             @Override
             protected void populateViewHolder(final PartyCardViewHolder viewHolder, final Party model, final int position) {
-                mStorageReference.child("photos/" + model.getPhoto()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Context ctx = getContext();
-                        if (ctx != null) {
-                            Glide.with(ctx).load(uri).centerCrop().into(viewHolder.mImg);
-                        }
-                    }
-                });
+//                mStorageReference.child("photos/" + model.getPhoto()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                    @Override
+//                    public void onSuccess(Uri uri) {
+//                        Context ctx = getContext();
+//                        if (ctx != null) {
+//                            Glide.with(ctx).load(uri).centerCrop().into(viewHolder.mImg);
+//                        }
+//                    }
+//                });
+                if (getContext() != null) {
+                    Glide.with(getContext()).using(new FirebaseImageLoader()).load(mStorageReference.child("photos/" + model.getPhoto())).centerCrop().into(viewHolder.mImg);
+                }
                 viewHolder.mTitle.setText(model.getTitle());
                 viewHolder.mPrice.setText(String.format("฿ %s", Double.toString(model.getPricePerPerson())));
                 viewHolder.mTime.setText(model.getDate() + " " + model.getTime());

@@ -1,9 +1,7 @@
 package com.example.phompang.eatyfinder;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -24,7 +22,7 @@ import com.example.phompang.eatyfinder.app.FirebaseUtilities;
 import com.example.phompang.eatyfinder.dialog.PeoplePickerDialog;
 import com.example.phompang.eatyfinder.model.Party;
 import com.example.phompang.eatyfinder.model.User;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -175,15 +173,16 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     private void setData() {
         collapsingToolbarLayout.setTitle(mParty.getTitle());
         //Glide.with(this).load(mParty.getPhoto()).centerCrop().into(mImg);
-        mStorageReference.child("photos/" + mParty.getPhoto()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Context ctx = getApplicationContext();
-                if (ctx != null) {
-                    Glide.with(ctx).load(uri).centerCrop().into(mImg);
-                }
-            }
-        });
+//        mStorageReference.child("photos/" + mParty.getPhoto()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                Context ctx = getApplicationContext();
+//                if (ctx != null) {
+//                    Glide.with(ctx).load(uri).centerCrop().into(mImg);
+//                }
+//            }
+//        });
+        Glide.with(this).using(new FirebaseImageLoader()).load(mStorageReference.child("photos/" + mParty.getPhoto())).centerCrop().into(mImg);
         mDate.setText(mParty.getDate());
         mTime.setText(mParty.getTime());
         mLocation.setText(mParty.getLocation());
