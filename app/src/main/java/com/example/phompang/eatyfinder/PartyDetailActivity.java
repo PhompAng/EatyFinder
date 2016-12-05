@@ -9,9 +9,11 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.example.phompang.eatyfinder.app.DpiUtils;
 import com.example.phompang.eatyfinder.app.FirebaseUtilities;
 import com.example.phompang.eatyfinder.dialog.PeoplePickerDialog;
+import com.example.phompang.eatyfinder.model.Comment;
 import com.example.phompang.eatyfinder.model.Party;
 import com.example.phompang.eatyfinder.model.User;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
@@ -32,6 +35,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mikhaellopez.circularimageview.CircularImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,12 +69,17 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     ImageView mSeeMore;
     @BindView(R.id.attendeeContainer)
     LinearLayout mAttendeeContainer;
+    @BindView(R.id.commentContainer)
+    LinearLayout mCommentContainer;
+    @BindView(R.id.commentEditText)
+    EditText mCommentEditText;
     @BindView(R.id.toolbarImg)
     ImageView mImg;
     @BindView(R.id.join)
     FloatingActionButton mJoin;
 
     private Party mParty;
+    private List<Comment> mComments;
     private DatabaseReference mDatabaseReference;
     private StorageReference mStorageReference;
     private FirebaseUtilities mFirebaseUtilities;
@@ -85,6 +96,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
 
         mParty = (Party) getIntent().getSerializableExtra("party");
         key = getIntent().getStringExtra("key");
+        mComments = new ArrayList<>();
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
 
@@ -102,6 +114,20 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mParty = dataSnapshot.getValue(Party.class);
                 setData();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        mDatabaseReference.child("comments").child(key).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    mComments.add(snapshot.getValue(Comment.class));
+                }
+                setComment();
             }
 
             @Override
@@ -170,6 +196,16 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         seeMoreClick();
     }
 
+    @OnClick(R.id.commentAdd)
+    public void addComment() {
+        String comment = mCommentEditText.getText().toString();
+        if (!TextUtils.isEmpty(comment)) {
+            Comment c = new Comment();
+            c.setComment(comment);
+            mFirebaseUtilities.addComment(key, c);
+        }
+    }
+
     private void setData() {
         collapsingToolbarLayout.setTitle(mParty.getTitle());
         //Glide.with(this).load(mParty.getPhoto()).centerCrop().into(mImg);
@@ -192,6 +228,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         mDesc.setText(mParty.getDesc());
 
         setAttendee(seeMoreState);
+        setComment();
     }
 
     public void setAttendee(boolean state) {
@@ -224,6 +261,9 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
             }
         } else {
             mAttendeeContainer.setOrientation(LinearLayout.VERTICAL);
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.CENTER_VERTICAL;
             for (User u: mParty.getAttendees().values()) {
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -232,9 +272,6 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
                 cv.setLayoutParams(new LinearLayout.LayoutParams(width, height));
                 Glide.with(this).load(u.getPhoto()).into(cv);
 
-
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layoutParams.gravity = Gravity.CENTER_VERTICAL;
 
                 TextView textView = new TextView(this);
                 textView.setLayoutParams(layoutParams);
@@ -255,6 +292,44 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
 
                 mAttendeeContainer.addView(linearLayout);
             }
+        }
+    }
+
+    public void setComment() {
+        int width = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
+        int height = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.CENTER_VERTICAL;
+
+        LinearLayout.LayoutParams commentLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        commentLayoutParams.gravity = Gravity.CENTER_VERTICAL;
+        for (Comment c: mComments) {
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+            CircularImageView cv = new CircularImageView(this);
+            cv.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+            Glide.with(this).load(c.getUser().getPhoto()).into(cv);
+
+            TextView textView = new TextView(this);
+            textView.setLayoutParams(layoutParams);
+            textView.setText(c.getUser().getDisplayName());
+            textView.setTextColor(ContextCompat.getColor(this, R.color.textPrimary));
+
+            LinearLayout commentLinearLayout = new LinearLayout(this);
+            commentLinearLayout.setOrientation(LinearLayout.VERTICAL);
+            TextView comment = new TextView(this);
+            commentLayoutParams.setMarginStart(width);
+            comment.setLayoutParams(commentLayoutParams);
+            comment.setText(c.getComment());
+            commentLinearLayout.addView(comment);
+
+            linearLayout.addView(cv);
+            linearLayout.addView(textView);
+
+            mCommentContainer.addView(linearLayout, mCommentContainer.getChildCount()-1);
+            mCommentContainer.addView(commentLinearLayout, mCommentContainer.getChildCount()-1);
         }
     }
 

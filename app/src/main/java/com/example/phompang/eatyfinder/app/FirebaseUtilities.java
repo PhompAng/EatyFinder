@@ -2,6 +2,7 @@ package com.example.phompang.eatyfinder.app;
 
 import android.util.Log;
 
+import com.example.phompang.eatyfinder.model.Comment;
 import com.example.phompang.eatyfinder.model.Party;
 import com.example.phompang.eatyfinder.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +47,24 @@ public class FirebaseUtilities {
 
     public void addUser(User u) {
         mDatabaseReference.child("users").child(u.getUid()).setValue(u);
+    }
+
+    public void addComment(final String key, final Comment comment) {
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final DatabaseReference reference = mDatabaseReference.child("comments").child(key).push();
+        mDatabaseReference.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User u = dataSnapshot.getValue(User.class);
+                comment.setUser(u);
+                reference.setValue(comment);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void joinParty(final String key, final int people) {
