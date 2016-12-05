@@ -1,6 +1,8 @@
 package com.example.phompang.eatyfinder;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -11,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,6 +40,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class PartyDetailActivity extends AppCompatActivity implements PeoplePickerDialog.OnJoinListener {
+
+    public static final int PARTY_EDIT = 1000;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
@@ -72,6 +75,8 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     private StorageReference mStorageReference;
     private FirebaseUtilities mFirebaseUtilities;
 
+    private String uid;
+    private String key;
     private boolean seeMoreState = false;
 
     @Override
@@ -81,9 +86,9 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         ButterKnife.bind(this);
 
         mParty = (Party) getIntent().getSerializableExtra("party");
+        key = getIntent().getStringExtra("key");
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
-        collapsingToolbarLayout.setTitle(mParty.getTitle());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -94,7 +99,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         mFirebaseUtilities = FirebaseUtilities.newInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
-        mDatabaseReference.child("parties").child(getIntent().getStringExtra("key")).addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.child("parties").child(key).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mParty = dataSnapshot.getValue(Party.class);
@@ -108,10 +113,10 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         });
         setData();
 
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         if (mParty.getAttendees().containsKey(uid)) {
-            mJoin.setVisibility(View.GONE);
+            mJoin.setImageResource(R.drawable.ic_mode_edit_white_24dp);
         }
     }
 
@@ -126,11 +131,25 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PARTY_EDIT && resultCode == Activity.RESULT_OK) {
+        }
+    }
+
     @OnClick(R.id.join)
     public void join() {
-        int maxPeople = mParty.getRequiredPeople() - mParty.getCurrentPeople();
-        DialogFragment dialogFragment = PeoplePickerDialog.newInstance(getIntent().getStringExtra("key"), maxPeople);
-        dialogFragment.show(getSupportFragmentManager(), "people");
+        if (mParty.getAttendees().containsKey(uid)) {
+            Intent intent = new Intent(PartyDetailActivity.this, AddActivity.class);
+            intent.putExtra("party", mParty);
+            intent.putExtra("key", key);
+            startActivityForResult(intent, PARTY_EDIT);
+        } else {
+            int maxPeople = mParty.getRequiredPeople() - mParty.getCurrentPeople();
+            DialogFragment dialogFragment = PeoplePickerDialog.newInstance(key, maxPeople);
+            dialogFragment.show(getSupportFragmentManager(), "people");
+        }
     }
 
     @OnClick(R.id.seeMore)
@@ -154,6 +173,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     }
 
     private void setData() {
+        collapsingToolbarLayout.setTitle(mParty.getTitle());
         //Glide.with(this).load(mParty.getPhoto()).centerCrop().into(mImg);
         mStorageReference.child("photos/" + mParty.getPhoto()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override

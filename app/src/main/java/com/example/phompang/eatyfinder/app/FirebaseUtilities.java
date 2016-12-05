@@ -38,6 +38,12 @@ public class FirebaseUtilities {
         joinParty(reference.getKey(), p.getCurrentPeople());
     }
 
+    public void updateParty(String key, Party p, int currentPeople) {
+        DatabaseReference reference = mDatabaseReference.child("parties").child(key);
+        reference.setValue(p);
+        joinParty(key, currentPeople);
+    }
+
     public void addUser(User u) {
         mDatabaseReference.child("users").child(u.getUid()).setValue(u);
     }

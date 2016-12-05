@@ -2,6 +2,7 @@ package com.example.phompang.eatyfinder;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -48,12 +49,21 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -96,7 +106,9 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     private Datetime datetime;
     private Uri selectedImage;
     private FirebaseUtilities mFirebaseUtilities;
-    private StorageReference folderRef;
+    private StorageReference mStorageReference;
+    private DatabaseReference mDatabaseReference;
+    private Menu menu;
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -104,6 +116,9 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
 
     private List<MyCompactVenue> mVenues;
     private MyCompactVenue mCompactVenue;
+    private Party mParty;
+
+    private boolean update = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +133,8 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
 
         datetime = new Datetime();
         mFirebaseUtilities = FirebaseUtilities.newInstance();
-        folderRef = FirebaseStorage.getInstance().getReference();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mStorageReference = FirebaseStorage.getInstance().getReference();
         mVenues = new ArrayList<>();
 
         mLocationRequest = LocationRequest.create()
@@ -132,6 +148,24 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
+        }
+
+
+        if (getIntent().getExtras() != null) {
+            update = true;
+            toolbar.setTitle("Update Party");
+            mDatabaseReference.child("parties").child(getIntent().getStringExtra("key")).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    mParty = dataSnapshot.getValue(Party.class);
+                    setData();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
 
         dateAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, datetime.date_data);
@@ -243,9 +277,58 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         }
     }
 
+    private void setData() {
+        mTitle.setText(mParty.getTitle());
+        mDesc.setText(mParty.getDesc());
+
+        datetime.setDate(mParty.getDate());
+        datetime.setTime(mParty.getTime());
+        datetime.date_data.add(datetime.date_data.size() - 1, datetime.getDate());
+        datetime.time_data.add(datetime.time_data.size() - 1, datetime.getTime());
+        mDate.setSelection(datetime.date_data.size()-2);
+        mTime.setSelection(datetime.time_data.size()-2);
+
+        Log.d("people", mParty.getAttendees().toString());
+        mCurrentPeople.setText(String.format(Locale.getDefault(), "%d", mParty.getAttendees().get(FirebaseAuth.getInstance().getCurrentUser().getUid()).getPeople()));
+        mRequiredPeople.setText(String.format(Locale.getDefault(), "%d", mParty.getRequiredPeople()));
+        mPrice.setText(String.format(Locale.getDefault(), "%.2f", mParty.getPrice()));
+        StorageReference photoRef = mStorageReference.child("photos/" + mParty.getPhoto());
+        photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Context ctx = getApplicationContext();
+                if (ctx != null) {
+                    Glide.with(ctx).load(uri).centerCrop().into(mImg);
+                }
+            }
+        });
+
+        try {
+            final File localFile = File.createTempFile("images", "jpg");
+            photoRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    selectedImage = Uri.fromFile(localFile);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.activity_add_action, menu);
+        if (update) {
+            MenuItem item = menu.findItem(R.id.action_add);
+            item.setTitle("Update");
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -276,7 +359,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     }
 
     private void uploadFromFile(Uri file, String uid) {
-        StorageReference imageRef = folderRef.child("photos/" + uid);
+        StorageReference imageRef = mStorageReference.child("photos/" + uid);
         UploadTask mUploadTask = imageRef.putFile(file);
 
         mUploadTask.addOnFailureListener(new OnFailureListener() {
@@ -353,7 +436,12 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         String desc = mDesc.getText().toString();
         String date = datetime.getDate();
         String time = datetime.getTime();
-        int currentPeople = Integer.parseInt(mCurrentPeople.getText().toString());
+        int currentPeople;
+        if (update) {
+            currentPeople = mParty.getCurrentPeople() - mParty.getAttendees().get(FirebaseAuth.getInstance().getCurrentUser().getUid()).getPeople() + Integer.parseInt(mCurrentPeople.getText().toString());
+        } else {
+            currentPeople = Integer.parseInt(mCurrentPeople.getText().toString());
+        }
         int requiredPeople = Integer.parseInt(mRequiredPeople.getText().toString());
         double price = Double.parseDouble(mPrice.getText().toString());
         String location = mLocation.getText().toString();
@@ -374,7 +462,12 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         p.setLocation(location);
         p.setPhoto(uid);
         p.setCategory(mCompactVenue.getCategories()[0]);
-        mFirebaseUtilities.addParty(p);
+        if (update) {
+            mFirebaseUtilities.updateParty(getIntent().getStringExtra("key"), p, currentPeople);
+            setResult(Activity.RESULT_OK);
+        } else {
+            mFirebaseUtilities.addParty(p);
+        }
         finish();
     }
 
