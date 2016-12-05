@@ -6,69 +6,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
     tools:context="com.example.phompang.eatyfinder.MeFragment">
-    <ImageView
-        android:id="@+id/toolbarImg"
-        android:layout_width="0dp"
-        android:layout_height="256dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/breakfast"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/meEmailCard"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarImg">
-        <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:paddingLeft="16dp"
-            android:paddingBottom="16dp">
+            android:layout_height="wrap_content">
             <ImageView
-                android:id="@+id/meEmilImg"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:tint="@color/colorAccent"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/ic_email_black_24dp"/>
+                android:id="@+id/toolbarImg"
+                android:layout_width="0dp"
+                android:layout_height="256dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/breakfast"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
 
-            <TextView
-                android:id="@+id/meEmail"
+            <android.support.v7.widget.CardView
+                android:id="@+id/meEmailCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_margin="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/toolbarImg">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingBottom="16dp">
+                    <ImageView
+                        android:id="@+id/meEmilImg"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:tint="@color/colorAccent"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/ic_email_black_24dp"/>
+
+                    <TextView
+                        android:id="@+id/meEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="16sp"
+                        android:text="ohlook@it.go"
+                        android:layout_toEndOf="@+id/meEmilImg"
+                        android:layout_marginStart="24dp" />
+                    <TextView
+                        android:id="@+id/meEmailText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/meEmail"
+                        android:layout_alignLeft="@id/meEmail"
+                        android:text="Email"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/meEmailCard"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <Button
+                android:id="@+id/meLogout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/textPrimary"
-                android:textSize="16sp"
-                android:text="ohlook@it.go"
-                android:layout_toEndOf="@+id/meEmilImg"
-                android:layout_marginStart="24dp" />
-            <TextView
-                android:id="@+id/meEmailText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/meEmail"
-                android:layout_alignLeft="@id/meEmail"
-                android:text="Email"/>
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-
-    <Button
-        android:id="@+id/meLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/logout"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/meEmailCard" />
+                android:text="@string/logout"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginStart="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/list" />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
 </android.support.constraint.ConstraintLayout>

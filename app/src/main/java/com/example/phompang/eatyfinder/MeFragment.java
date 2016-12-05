@@ -2,8 +2,11 @@ package com.example.phompang.eatyfinder;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,8 +16,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.phompang.eatyfinder.model.Party;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,6 +85,13 @@ public class MeFragment extends Fragment {
     TextView mEmail;
     @BindView(R.id.toolbarImg)
     ImageView meImg;
+    @BindView(R.id.list)
+    RecyclerView mList;
+
+    private FirebaseRecyclerAdapter mAdapter;
+
+    private StorageReference mStorageReference;
+    private DatabaseReference mDatabaseReference;
 
 //    private CollapsingToolbarLayout collapsingToolbarLayout;
 
@@ -95,6 +113,39 @@ public class MeFragment extends Fragment {
             Glide.with(this).load(user.getPhotoUrl()).centerCrop().into(meImg);
             mEmail.setText(user.getEmail());
         }
+
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mStorageReference = FirebaseStorage.getInstance().getReference();
+
+        Query postsQuery = getQuery(mDatabaseReference);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        layoutManager.setStackFromEnd(true);
+        mList.setLayoutManager(layoutManager);
+
+        mAdapter = new FirebaseRecyclerAdapter<Party, AllFragment.PartyCardViewHolder>(Party.class, R.layout.party_card_layout, AllFragment.PartyCardViewHolder.class, postsQuery) {
+            @Override
+            protected void populateViewHolder(final AllFragment.PartyCardViewHolder viewHolder, final Party model, final int position) {
+                if (getContext() != null) {
+                    Glide.with(getContext()).using(new FirebaseImageLoader()).load(mStorageReference.child("photos/" + model.getPhoto())).centerCrop().into(viewHolder.mImg);
+                }
+                viewHolder.mTitle.setText(model.getTitle());
+                viewHolder.mPrice.setText(String.format("฿ %s", Double.toString(model.getPricePerPerson())));
+                viewHolder.mTime.setText(model.getDate() + " " + model.getTime());
+                viewHolder.mPeople.setText("(" + model.getCurrentPeople() + "/" + model.getRequiredPeople() + " คน)");
+                viewHolder.mDesc.setText(model.getDesc());
+
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(getActivity(), PartyDetailActivity.class);
+                        i.putExtra("party", model);
+                        i.putExtra("key", mAdapter.getRef(position).getKey());
+                        startActivity(i);
+                    }
+                });
+            }
+        };
+        mList.setAdapter(mAdapter);
 
         return v;
     }
@@ -128,6 +179,11 @@ public class MeFragment extends Fragment {
 
     public interface OnLogoutListener {
         void onLogout();
+    }
+
+    public Query getQuery(DatabaseReference databaseReference) {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        return databaseReference.child("parties").orderByChild("owner").equalTo(uid).limitToLast(20);
     }
 
 }
