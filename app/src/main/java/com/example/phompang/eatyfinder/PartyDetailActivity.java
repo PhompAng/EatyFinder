@@ -149,7 +149,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
 
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        if (mParty.getAttendees().containsKey(uid)) {
+        if (mParty.getOwner().equals(uid)) {
             mJoin.setImageResource(R.drawable.ic_mode_edit_white_24dp);
         }
     }
