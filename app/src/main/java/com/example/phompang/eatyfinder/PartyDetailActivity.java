@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -260,9 +261,18 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         int height = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
         if (!state) {
             mAttendeeContainer.setOrientation(LinearLayout.HORIZONTAL);
-            for (User u : mParty.getAttendees().values()) {
+            for (final User u : mParty.getAttendees().values()) {
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(PartyDetailActivity.this, ProfileActivity.class);
+                        intent.putExtra("uid", u.getUid());
+                        startActivity(intent);
+                    }
+                };
                 CircularImageView cv = new CircularImageView(this);
                 cv.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+                cv.setOnClickListener(clickListener);
                 Glide.with(this).load(u.getPhoto()).into(cv);
 
                 TextView textView = new TextView(this);
@@ -272,6 +282,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
                 } else {
                     textView.setText("");
                 }
+                textView.setOnClickListener(clickListener);
                 textView.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
                 mAttendeeContainer.addView(cv);
                 mAttendeeContainer.addView(textView);
@@ -281,9 +292,18 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
 
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.gravity = Gravity.CENTER_VERTICAL;
-            for (User u: mParty.getAttendees().values()) {
+            for (final User u: mParty.getAttendees().values()) {
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(PartyDetailActivity.this, ProfileActivity.class);
+                        intent.putExtra("uid", u.getUid());
+                        startActivity(intent);
+                    }
+                };
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                linearLayout.setOnClickListener(clickListener);
 
                 CircularImageView cv = new CircularImageView(this);
                 cv.setLayoutParams(new LinearLayout.LayoutParams(width, height));
@@ -328,9 +348,19 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
 
         LinearLayout.LayoutParams commentLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         commentLayoutParams.gravity = Gravity.CENTER_VERTICAL;
-        for (Comment c: mComments) {
+        for (final Comment c: mComments) {
+            View.OnClickListener clickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(PartyDetailActivity.this, ProfileActivity.class);
+                    intent.putExtra("uid", c.getUser().getUid());
+                    startActivity(intent);
+                }
+            };
+
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setOnClickListener(clickListener);
 
             CircularImageView cv = new CircularImageView(this);
             cv.setLayoutParams(new LinearLayout.LayoutParams(width, height));
