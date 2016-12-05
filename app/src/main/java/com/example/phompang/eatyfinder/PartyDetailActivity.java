@@ -226,16 +226,6 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
 
     private void setData() {
         collapsingToolbarLayout.setTitle(mParty.getTitle());
-        //Glide.with(this).load(mParty.getPhoto()).centerCrop().into(mImg);
-//        mStorageReference.child("photos/" + mParty.getPhoto()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//                Context ctx = getApplicationContext();
-//                if (ctx != null) {
-//                    Glide.with(ctx).load(uri).centerCrop().into(mImg);
-//                }
-//            }
-//        });
         Glide.with(this).using(new FirebaseImageLoader()).load(mStorageReference.child("photos/" + mParty.getPhoto())).centerCrop().into(mImg);
         mDate.setText(mParty.getDate());
         mTime.setText(mParty.getTime());
