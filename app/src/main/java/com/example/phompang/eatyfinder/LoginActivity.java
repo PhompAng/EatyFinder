@@ -3,9 +3,9 @@ package com.example.phompang.eatyfinder;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -38,11 +38,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import com.google.firebase.auth.TwitterAuthProvider;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -51,6 +48,8 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -271,6 +270,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             user.setEmail(firebaseUser.getEmail());
             user.setProvide(firebaseUser.getProviderId());
             user.setPhoto(firebaseUser.getPhotoUrl().toString());
+            Log.d("tokennn", FirebaseInstanceId.getInstance().getToken());
+            user.setToken(FirebaseInstanceId.getInstance().getToken());
             mFirebaseUtilities.addUser(user);
         } else {
             Log.e("Login", "No user");

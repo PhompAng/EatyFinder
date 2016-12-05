@@ -11,6 +11,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * Created by phompang on 10/25/2016 AD.
@@ -74,6 +75,7 @@ public class FirebaseUtilities {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 DatabaseReference attendees = mDatabaseReference.child("parties").child(key).child("attendees").child(uid);
                 User u = dataSnapshot.getValue(User.class);
+                u.setToken(FirebaseInstanceId.getInstance().getToken());
 
                 attendees.setValue(u);
                 attendees.child("people").setValue(people);
