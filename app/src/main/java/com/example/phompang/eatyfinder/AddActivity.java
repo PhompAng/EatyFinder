@@ -26,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -98,7 +97,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     @BindView(R.id.addPricePerPerson)
     EditText mPricePerPerson;
     @BindView(R.id.addLocation)
-    AutoCompleteTextView mLocation;
+    Spinner mLocation;
 
     private ArrayAdapter<String> dateAdapter;
     private ArrayAdapter<String> timeAdapter;
@@ -258,14 +257,18 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         });
 
         mVenuesAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, mVenues);
-        mLocation.setThreshold(1);
         mVenuesAdapter.setNotifyOnChange(true);
         mLocation.setAdapter(mVenuesAdapter);
 
-        mLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mLocation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mCompactVenue = (MyCompactVenue) adapterView.getItemAtPosition(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
     }
@@ -382,16 +385,15 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         mPrice.setError(null);
         mCurrentPeople.setError(null);
         mRequiredPeople.setError(null);
-        mLocation.setError(null);
 
         boolean cancel = false;
         View focusView = null;
 
-        if (TextUtils.isEmpty(mLocation.getText().toString())) {
-            mLocation.setError(getString(R.string.error_field_required));
-            focusView = mLocation;
-            cancel = true;
-        }
+//        if (TextUtils.isEmpty(mLocation.getText().toString())) {
+//            mLocation.setError(getString(R.string.error_field_required));
+//            focusView = mLocation;
+//            cancel = true;
+//        }
         if (TextUtils.isEmpty((mPrice.getText().toString()))) {
             mPrice.setError(getString(R.string.error_field_required));
             focusView = mPrice;
@@ -444,7 +446,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
         }
         int requiredPeople = Integer.parseInt(mRequiredPeople.getText().toString());
         double price = Double.parseDouble(mPrice.getText().toString());
-        String location = mLocation.getText().toString();
+        String location = ((MyCompactVenue) mLocation.getSelectedItem()).getName();
 
         String uid = UUID.randomUUID().toString();
         uploadFromFile(selectedImage, uid);
