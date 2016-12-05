@@ -81,6 +81,8 @@ public class MeFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    @BindView(R.id.name)
+    TextView mName;
     @BindView(R.id.meEmail)
     TextView mEmail;
     @BindView(R.id.toolbarImg)
@@ -111,6 +113,7 @@ public class MeFragment extends Fragment {
         if (user != null) {
 //            collapsingToolbarLayout.setTitle(user.getDisplayName());
             Glide.with(this).load(user.getPhotoUrl()).centerCrop().into(meImg);
+            mName.setText(user.getDisplayName());
             mEmail.setText(user.getEmail());
         }
 
