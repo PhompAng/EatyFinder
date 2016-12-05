@@ -2,7 +2,10 @@ package com.example.phompang.eatyfinder.app;
 
 import android.util.Log;
 
+import com.example.phompang.eatyfinder.Interface.FCMInteface;
 import com.example.phompang.eatyfinder.model.Comment;
+import com.example.phompang.eatyfinder.model.Notification;
+import com.example.phompang.eatyfinder.model.NotificationBody;
 import com.example.phompang.eatyfinder.model.Party;
 import com.example.phompang.eatyfinder.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -12,6 +15,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by phompang on 10/25/2016 AD.
@@ -79,6 +90,8 @@ public class FirebaseUtilities {
 
                 attendees.setValue(u);
                 attendees.child("people").setValue(people);
+
+                sendNoti(key, u);
             }
 
             @Override
@@ -87,6 +100,58 @@ public class FirebaseUtilities {
             }
         });
 
+    }
+
+    private void sendNoti(String key, final User u) {
+        mDatabaseReference.child("parties").child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Party p = dataSnapshot.getValue(Party.class);
+                String uid = p.getOwner();
+
+                mDatabaseReference.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl("https://fcm.googleapis.com")
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();;
+                        FCMInteface fcmInteface = retrofit.create(FCMInteface.class);
+
+                        Notification notification = new Notification();
+                        NotificationBody body = new NotificationBody();
+                        body.setBody(u.getDisplayName() + " join your party");
+                        body.setTitle("Eaty Finder");
+                        notification.setTo(user.getToken());
+                        notification.setNotification(body);
+                        Call<ResponseBody> call = fcmInteface.sendNoti(notification);
+                        Log.d("noti", notification.getTo());
+                        call.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void success(Result<ResponseBody> result) {
+                                Log.d("sendNoti", "success");
+                            }
+
+                            @Override
+                            public void failure(TwitterException exception) {
+                                Log.e("sendNoti", "fail");
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void updateCurrentPeople(String key, final int people) {
