@@ -5,16 +5,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.phompang.eatyfinder.app.DpiUtils;
 import com.example.phompang.eatyfinder.model.Party;
+import com.example.phompang.eatyfinder.model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -111,10 +116,13 @@ public class AllFragment extends Fragment {
         mAdapter = new FirebaseRecyclerAdapter<Party, PartyCardViewHolder>(Party.class, R.layout.party_card_layout, PartyCardViewHolder.class, postsQuery) {
             @Override
             protected void populateViewHolder(final PartyCardViewHolder viewHolder, final Party model, final int position) {
+                int width = DpiUtils.toPixels(30, getResources().getDisplayMetrics());
+                int height = DpiUtils.toPixels(30, getResources().getDisplayMetrics());
                 if (getContext() != null) {
                     Glide.with(getContext()).using(new FirebaseImageLoader()).load(mStorageReference.child("photos/" + model.getPhoto())).centerCrop().into(viewHolder.mImg);
                 }
                 viewHolder.mTitle.setText(model.getTitle());
+                viewHolder.mCategory.setText(model.getCategory().getName());
                 viewHolder.mPrice.setText(String.format("฿ %s", Double.toString(model.getPricePerPerson())));
                 viewHolder.mTime.setText(model.getDate() + " " + model.getTime());
                 viewHolder.mPeople.setText("(" + model.getCurrentPeople() + "/" + model.getRequiredPeople() + " คน)");
@@ -129,6 +137,27 @@ public class AllFragment extends Fragment {
                         startActivity(i);
                     }
                 });
+
+                if (null != viewHolder.mAttendee && viewHolder.mAttendee.getChildCount() > 0) {
+                    viewHolder.mAttendee.removeAllViews();
+                }
+
+                for (final User u : model.getAttendees().values()) {
+                    CircularImageView cv = new CircularImageView(getContext());
+                    cv.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+                    Glide.with(getContext()).load(u.getPhoto()).into(cv);
+
+                    TextView textView = new TextView(getContext());
+                    textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    if (u.getPeople() > 1) {
+                        textView.setText(String.format("+%d", u.getPeople() - 1));
+                    } else {
+                        textView.setText("");
+                    }
+                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                    viewHolder.mAttendee.addView(cv);
+                    viewHolder.mAttendee.addView(textView);
+                }
             }
         };
         mAll.setAdapter(mAdapter);
@@ -191,6 +220,8 @@ public class AllFragment extends Fragment {
 
         @BindView(R.id.partyCardTitle)
         TextView mTitle;
+        @BindView(R.id.partyCardCategory)
+        TextView mCategory;
         @BindView(R.id.partyCardPrice)
         TextView mPrice;
         @BindView(R.id.partyCardImg)
@@ -201,6 +232,8 @@ public class AllFragment extends Fragment {
         TextView mPeople;
         @BindView(R.id.partyCardDesc)
         TextView mDesc;
+        @BindView(R.id.partyCardAttendee)
+        LinearLayout mAttendee;
         View mView;
         public PartyCardViewHolder(View itemView) {
             super(itemView);
