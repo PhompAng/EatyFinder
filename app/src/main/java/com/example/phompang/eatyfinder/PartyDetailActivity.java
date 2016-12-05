@@ -118,6 +118,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     private String uid;
     private String key;
     private boolean seeMoreState = false;
+    private boolean update = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +152,8 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
 
         if (mParty.getOwner().equals(uid)) {
             mJoin.setImageResource(R.drawable.ic_mode_edit_white_24dp);
+        } else if (mParty.getAttendees().containsKey(uid)) {
+            update = true;
         }
     }
 
@@ -187,7 +190,12 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
             intent.putExtra("key", key);
             startActivityForResult(intent, PARTY_EDIT);
         } else {
-            int maxPeople = mParty.getRequiredPeople() - mParty.getCurrentPeople();
+            int maxPeople;
+            if (update) {
+                maxPeople = mParty.getRequiredPeople() - mParty.getCurrentPeople() + mParty.getAttendees().get(uid).getPeople();
+            } else {
+                maxPeople = mParty.getRequiredPeople() - mParty.getCurrentPeople();
+            }
             DialogFragment dialogFragment = PeoplePickerDialog.newInstance(key, maxPeople);
             dialogFragment.show(getSupportFragmentManager(), "people");
         }
@@ -380,6 +388,9 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     @Override
     public void onJoin(String key, int people) {
         mFirebaseUtilities.joinParty(key, people);
+        if (update) {
+            people -= mParty.getAttendees().get(uid).getPeople();
+        }
         mFirebaseUtilities.updateCurrentPeople(key, people);
     }
 }
