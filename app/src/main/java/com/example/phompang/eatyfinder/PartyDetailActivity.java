@@ -181,7 +181,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
 
     @OnClick(R.id.join)
     public void join() {
-        if (mParty.getAttendees().containsKey(uid)) {
+        if (mParty.getOwner().equals(uid)) {
             Intent intent = new Intent(PartyDetailActivity.this, AddActivity.class);
             intent.putExtra("party", mParty);
             intent.putExtra("key", key);
