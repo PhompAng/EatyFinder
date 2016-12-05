@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,11 +41,17 @@ import com.example.phompang.eatyfinder.model.Datetime;
 import com.example.phompang.eatyfinder.model.MyCompactVenue;
 import com.example.phompang.eatyfinder.model.Party;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -73,6 +80,7 @@ import butterknife.OnClick;
 public class AddActivity extends AppCompatActivity implements DatePickerFragment.OnSetDateListener, TimePickerFragment.OnSetTimeListener, GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks, LocationListener {
 
     public static final int RESULT_LOAD_IMAGE = 3;
+    public static final int PLACE_PICKER_REQUEST = 1;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     public static final int REQUEST_CODE_ASK_PERMISSIONS = 8000;
 
@@ -107,7 +115,6 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     private FirebaseUtilities mFirebaseUtilities;
     private StorageReference mStorageReference;
     private DatabaseReference mDatabaseReference;
-    private Menu menu;
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -146,6 +153,9 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .enableAutoManage(this, this)
                     .build();
         }
 
@@ -276,6 +286,12 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
     @OnClick(R.id.addGetLocation)
     public void getLocation() {
         if (mLastLocation != null) {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            try {
+                startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+            } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
             handleNewLocation(mLastLocation);
         }
     }
@@ -326,7 +342,6 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
         getMenuInflater().inflate(R.menu.activity_add_action, menu);
         if (update) {
             MenuItem item = menu.findItem(R.id.action_add);
@@ -357,6 +372,16 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
                     selectedImage = intent.getData();
                     mImg.setPadding(0,0,0,0);
                     Glide.with(this).loadFromMediaStore(selectedImage).centerCrop().into(mImg);
+                }
+                break;
+            case PLACE_PICKER_REQUEST:
+                if (resultCode == RESULT_OK && null != intent) {
+                    Place place = PlacePicker.getPlace(this, intent);
+                    LatLng latLng = place.getLatLng();
+                    Location temp = new Location(LocationManager.GPS_PROVIDER);
+                    temp.setLatitude(latLng.latitude);
+                    temp.setLongitude(latLng.longitude);
+                    handleNewLocation(temp);
                 }
         }
     }

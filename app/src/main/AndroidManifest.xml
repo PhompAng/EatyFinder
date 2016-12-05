@@ -20,6 +20,9 @@
         <meta-data
             android:name="com.example.phompang.eatyfinder.app.GlideConfiguration"
             android:value="GlideModule" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDTu0wZqAcx9vRfeew5-hNZD7VVZr9-Iac" />
 
         <activity
             android:name=".MainActivity"
