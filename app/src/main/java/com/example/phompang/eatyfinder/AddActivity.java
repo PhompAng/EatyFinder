@@ -240,7 +240,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
                 if (!TextUtils.isEmpty(mPrice.getText().toString()) && !TextUtils.isEmpty(mRequiredPeople.getText().toString())) {
                     Double price = Double.parseDouble(mPrice.getText().toString());
                     int people = Integer.parseInt(mRequiredPeople.getText().toString());
-                    mPricePerPerson.setText(Double.toString(price / people));
+                    mPricePerPerson.setText(String.format(Locale.getDefault(), "%.2f", price / people));
                 }
             }
         });
@@ -261,7 +261,7 @@ public class AddActivity extends AppCompatActivity implements DatePickerFragment
                 if (!TextUtils.isEmpty(mPrice.getText().toString()) && !TextUtils.isEmpty(mRequiredPeople.getText().toString())) {
                     Double price = Double.parseDouble(mPrice.getText().toString());
                     int people = Integer.parseInt(mRequiredPeople.getText().toString());
-                    mPricePerPerson.setText(Double.toString(price / people));
+                    mPricePerPerson.setText(String.format(Locale.getDefault(), "%.2f", price / people));
                 }
             }
         });

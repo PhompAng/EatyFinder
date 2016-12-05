@@ -39,6 +39,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -238,8 +239,8 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         mDate.setText(mParty.getDate());
         mTime.setText(mParty.getTime());
         mLocation.setText(mParty.getLocation());
-        mPrice.setText(Double.toString(mParty.getPrice()));
-        mPricePerPerson.setText(Double.toString(mParty.getPricePerPerson()));
+        mPrice.setText(String.format(Locale.getDefault(), "%.2f", mParty.getPrice()));
+        mPricePerPerson.setText(String.format(Locale.getDefault(), "%.2f", mParty.getPricePerPerson()));
         mPeople.setText(mParty.getCurrentPeople() + "/" + mParty.getRequiredPeople() + " คน");
         mDesc.setText(mParty.getDesc());
 
@@ -276,7 +277,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
                 TextView textView = new TextView(this);
                 textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 if (u.getPeople() > 1) {
-                    textView.setText(String.format("+%d", u.getPeople() - 1));
+                    textView.setText(String.format(Locale.getDefault(), "+%d", u.getPeople() - 1));
                 } else {
                     textView.setText("");
                 }
@@ -316,7 +317,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
                 TextView textView1 = new TextView(this);
                 textView1.setLayoutParams(layoutParams);
                 if (u.getPeople() > 1) {
-                    textView1.setText(String.format(" with %d friends", u.getPeople() - 1));
+                    textView1.setText(String.format(Locale.getDefault(), " with %d friends", u.getPeople() - 1));
                 } else {
                     textView1.setText("");
                 }

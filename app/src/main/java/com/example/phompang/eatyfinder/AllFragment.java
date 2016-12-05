@@ -28,6 +28,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -150,7 +152,7 @@ public class AllFragment extends Fragment {
                     TextView textView = new TextView(getContext());
                     textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     if (u.getPeople() > 1) {
-                        textView.setText(String.format("+%d", u.getPeople() - 1));
+                        textView.setText(String.format(Locale.getDefault(), "+%d", u.getPeople() - 1));
                     } else {
                         textView.setText("");
                     }
