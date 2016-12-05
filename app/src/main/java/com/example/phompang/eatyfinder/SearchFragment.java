@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,8 +58,6 @@ public class SearchFragment extends Fragment implements CategoryAdapter.ViewHold
 
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mDatabaseReference;
-
-    private Set<Category> categorySet;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -132,17 +131,16 @@ public class SearchFragment extends Fragment implements CategoryAdapter.ViewHold
         mSearchAppName.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/monofur_powerline.ttf"));
         Glide.with(this).load(R.drawable.breakfast).centerCrop().into(mSearchBg);
 
-        categorySet = new LinkedHashSet<>();
-        categoryList = new ArrayList<>(categorySet);
+        categoryList = new ArrayList<>();
         displayCategory();
-        mDatabaseReference.child("parties").limitToLast(6).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReference.child("parties").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     Category category = snapshot.getValue(Party.class).getCategory();
-                    categorySet.add(category);
+                    categoryList.add(category);
                 }
-                categoryList = new ArrayList<>(categorySet);
+                categoryList = removeDuplicates(categoryList);
                 displayCategory();
 
 //                Log.d("category", categorySet.toString());
@@ -216,5 +214,26 @@ public class SearchFragment extends Fragment implements CategoryAdapter.ViewHold
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private List<Category> removeDuplicates(List<Category> listWithDuplicates) {
+    /* Set of all attributes seen so far */
+        Set<String> attributes = new HashSet<>();
+    /* All confirmed duplicates go in here */
+        List<Category> duplicates = new ArrayList<>();
+
+        for(Category x : listWithDuplicates) {
+            if(attributes.contains(x.getName())) {
+                duplicates.add(x);
+            }
+            attributes.add(x.getName());
+        }
+    /* Clean list without any dups */
+        listWithDuplicates.removeAll(duplicates);
+        Log.d("size", listWithDuplicates.size() + "");
+        if (listWithDuplicates.size() > 6) {
+            return listWithDuplicates.subList(0, 6);
+        }
+        return listWithDuplicates;
     }
 }
