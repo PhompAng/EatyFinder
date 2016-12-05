@@ -61,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/addDescHolder"
+        app:layout_constraintTop_toBottomOf="@+id/addLocationHolder"
         app:layout_constraintLeft_toRightOf="@+id/addDateImg"
         style="@android:style/Widget.Material.Spinner.Underlined"
         android:layout_marginStart="8dp" />
@@ -74,7 +74,7 @@
         app:layout_constraintLeft_toRightOf="@+id/addDate"
         android:layout_marginTop="8dp"
         style="@android:style/Widget.Material.Spinner.Underlined"
-        app:layout_constraintTop_toBottomOf="@+id/addDescHolder" />
+        app:layout_constraintTop_toBottomOf="@+id/addLocationHolder" />
 
     <ImageView
         android:id="@+id/addPeopleImg"
@@ -152,7 +152,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/addPriceHolder"
+        app:layout_constraintTop_toBottomOf="@+id/addDescHolder"
         android:layout_marginStart="8dp"
         app:layout_constraintLeft_toRightOf="@+id/addLocationImg"
         android:layout_marginEnd="16dp"
