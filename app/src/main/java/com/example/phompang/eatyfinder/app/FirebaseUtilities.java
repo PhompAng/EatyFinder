@@ -108,43 +108,44 @@ public class FirebaseUtilities {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Party p = dataSnapshot.getValue(Party.class);
                 String uid = p.getOwner();
+                if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(uid)) {
+                    mDatabaseReference.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User user = dataSnapshot.getValue(User.class);
+                            Retrofit retrofit = new Retrofit.Builder()
+                                    .baseUrl("https://fcm.googleapis.com")
+                                    .addConverterFactory(GsonConverterFactory.create())
+                                    .build();;
+                            FCMInteface fcmInteface = retrofit.create(FCMInteface.class);
 
-                mDatabaseReference.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
-                        Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl("https://fcm.googleapis.com")
-                                .addConverterFactory(GsonConverterFactory.create())
-                                .build();;
-                        FCMInteface fcmInteface = retrofit.create(FCMInteface.class);
+                            Notification notification = new Notification();
+                            NotificationBody body = new NotificationBody();
+                            body.setBody(u.getDisplayName() + " join your party");
+                            body.setTitle("Eaty Finder");
+                            notification.setTo(user.getToken());
+                            notification.setNotification(body);
+                            Call<ResponseBody> call = fcmInteface.sendNoti(notification);
+                            Log.d("noti", notification.getTo());
+                            call.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void success(Result<ResponseBody> result) {
+                                    Log.d("sendNoti", "success");
+                                }
 
-                        Notification notification = new Notification();
-                        NotificationBody body = new NotificationBody();
-                        body.setBody(u.getDisplayName() + " join your party");
-                        body.setTitle("Eaty Finder");
-                        notification.setTo(user.getToken());
-                        notification.setNotification(body);
-                        Call<ResponseBody> call = fcmInteface.sendNoti(notification);
-                        Log.d("noti", notification.getTo());
-                        call.enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void success(Result<ResponseBody> result) {
-                                Log.d("sendNoti", "success");
-                            }
+                                @Override
+                                public void failure(TwitterException exception) {
+                                    Log.e("sendNoti", "fail");
+                                }
+                            });
+                        }
 
-                            @Override
-                            public void failure(TwitterException exception) {
-                                Log.e("sendNoti", "fail");
-                            }
-                        });
-                    }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                        }
+                    });
+                }
             }
 
             @Override
