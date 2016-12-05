@@ -84,6 +84,36 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     private StorageReference mStorageReference;
     private FirebaseUtilities mFirebaseUtilities;
 
+    private DatabaseReference commentRef;
+    private ValueEventListener commentListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            mComments.clear();
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                mComments.add(snapshot.getValue(Comment.class));
+            }
+            setComment();
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+    private DatabaseReference partiesRef;
+    private ValueEventListener partiesListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            mParty = dataSnapshot.getValue(Party.class);
+            setData();
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
     private String uid;
     private String key;
     private boolean seeMoreState = false;
@@ -109,32 +139,11 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         mFirebaseUtilities = FirebaseUtilities.newInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
-        mDatabaseReference.child("parties").child(key).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mParty = dataSnapshot.getValue(Party.class);
-                setData();
-            }
+        partiesRef = mDatabaseReference.child("parties").child(key);
+        partiesRef.addValueEventListener(partiesListener);
+        commentRef = mDatabaseReference.child("comments").child(key);
+        commentRef.addValueEventListener(commentListener);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        mDatabaseReference.child("comments").child(key).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    mComments.add(snapshot.getValue(Comment.class));
-                }
-                setComment();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
         setData();
 
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -160,6 +169,13 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PARTY_EDIT && resultCode == Activity.RESULT_OK) {
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        partiesRef.removeEventListener(partiesListener);
+        commentRef.removeEventListener(commentListener);
     }
 
     @OnClick(R.id.join)
@@ -203,6 +219,7 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
             Comment c = new Comment();
             c.setComment(comment);
             mFirebaseUtilities.addComment(key, c);
+            mCommentEditText.setText("");
         }
     }
 
@@ -296,6 +313,13 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
     }
 
     public void setComment() {
+        if (null != mCommentContainer && mCommentContainer.getChildCount() > 0) {
+            try {
+                mCommentContainer.removeViews (0, mCommentContainer.getChildCount());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         int width = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
         int height = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
 
@@ -328,8 +352,8 @@ public class PartyDetailActivity extends AppCompatActivity implements PeoplePick
             linearLayout.addView(cv);
             linearLayout.addView(textView);
 
-            mCommentContainer.addView(linearLayout, mCommentContainer.getChildCount()-1);
-            mCommentContainer.addView(commentLinearLayout, mCommentContainer.getChildCount()-1);
+            mCommentContainer.addView(linearLayout);
+            mCommentContainer.addView(commentLinearLayout);
         }
     }
 
