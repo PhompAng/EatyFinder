@@ -5,15 +5,18 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.phompang.eatyfinder.app.DpiUtils;
 import com.example.phompang.eatyfinder.model.Party;
 import com.example.phompang.eatyfinder.model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -26,6 +29,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.mikhaellopez.circularimageview.CircularImageView;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -147,6 +153,31 @@ public class ProfileFragment extends Fragment {
                         startActivity(i);
                     }
                 });
+
+
+                if (null != viewHolder.mAttendee && viewHolder.mAttendee.getChildCount() > 0) {
+                    viewHolder.mAttendee.removeAllViews();
+                }
+
+                int width = DpiUtils.toPixels(30, getResources().getDisplayMetrics());
+                int height = DpiUtils.toPixels(30, getResources().getDisplayMetrics());
+
+                for (final User u : model.getAttendees().values()) {
+                    CircularImageView cv = new CircularImageView(getContext());
+                    cv.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+                    Glide.with(getContext()).load(u.getPhoto()).into(cv);
+
+                    TextView textView = new TextView(getContext());
+                    textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    if (u.getPeople() > 1) {
+                        textView.setText(String.format(Locale.getDefault(), "+%d", u.getPeople() - 1));
+                    } else {
+                        textView.setText("");
+                    }
+                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                    viewHolder.mAttendee.addView(cv);
+                    viewHolder.mAttendee.addView(textView);
+                }
             }
         };
         mList.setAdapter(mAdapter);
