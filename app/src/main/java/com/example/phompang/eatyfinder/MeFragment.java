@@ -139,7 +139,7 @@ public class MeFragment extends Fragment {
                     Glide.with(getContext()).using(new FirebaseImageLoader()).load(mStorageReference.child("photos/" + model.getPhoto())).centerCrop().into(viewHolder.mImg);
                 }
                 viewHolder.mTitle.setText(model.getTitle());
-                viewHolder.mPrice.setText(String.format("฿ %s", Double.toString(model.getPricePerPerson())));
+                viewHolder.mPrice.setText(String.format(Locale.getDefault(), "฿ %.2f", model.getPricePerPerson()));
                 viewHolder.mTime.setText(model.getDate() + " " + model.getTime());
                 viewHolder.mPeople.setText("(" + model.getCurrentPeople() + "/" + model.getRequiredPeople() + " คน)");
                 viewHolder.mDesc.setText(model.getDesc());

@@ -125,7 +125,7 @@ public class AllFragment extends Fragment {
                 }
                 viewHolder.mTitle.setText(model.getTitle());
                 viewHolder.mCategory.setText(model.getCategory().getName());
-                viewHolder.mPrice.setText(String.format("฿ %s", Double.toString(model.getPricePerPerson())));
+                viewHolder.mPrice.setText(String.format(Locale.getDefault(), "฿ %.2f", model.getPricePerPerson()));
                 viewHolder.mTime.setText(model.getDate() + " " + model.getTime());
                 viewHolder.mPeople.setText("(" + model.getCurrentPeople() + "/" + model.getRequiredPeople() + " คน)");
                 viewHolder.mDesc.setText(model.getDesc());
