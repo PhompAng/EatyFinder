@@ -1,0 +1,85 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.phompang.eatyfinder.SearchFragment">
+
+    <ImageView
+        android:id="@+id/searchBg"
+        android:layout_width="450dp"
+        android:layout_height="330dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center|top"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/search_gradient" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
+
+        <TextView
+            android:text="@string/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="90dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="40sp"
+            android:textColor="@color/textColorPrimary"
+            android:id="@+id/searchAppName"/>
+
+        <EditText
+            android:id="@+id/searchBar"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="72dp"
+            app:layout_constraintTop_toBottomOf="@+id/searchAppName"
+            android:background="@drawable/edittext_bordered"
+            android:hint="What are you looking for, Tom ?"
+            android:textSize="12sp"
+            android:paddingLeft="32dp"
+            android:elevation="2dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/genreList"
+            android:scrollbars="vertical"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/searchBar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp" />
+
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/genreList"-->
+            <!--android:scrollbars="vertical"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginTop="24dp"-->
+            <!--android:layout_marginLeft="14dp"-->
+            <!--android:layout_marginRight="14dp"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/searchSearchBar"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--app:layout_constraintRight_toRightOf="parent"/>-->
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.design.widget.CoordinatorLayout>

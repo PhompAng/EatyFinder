@@ -1,0 +1,24 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.phompang.eatyfinder.AllFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/allList"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/allAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/white"
+        app:layout_behavior="com.example.phompang.eatyfinder.app.ScrollAwareFABBehavior"
+        app:srcCompat="@drawable/ic_add_black_24dp"/>
+
+</android.support.design.widget.CoordinatorLayout>

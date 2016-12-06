@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1029982404531",
+    "firebase_url": "https://eatyfinder.firebaseio.com",
+    "project_id": "eatyfinder",
+    "storage_bucket": "eatyfinder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029982404531:android:75beb98baa7129d6",
+        "android_client_info": {
+          "package_name": "com.example.phompang.eatyfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1029982404531-senfnm9ist3chjdirgp611hmjp3fa3m1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW3quaZbvIoMprzeFy3W7HLQYPNUiKQfc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,8 +1,29 @@
 <resources>
-    <string name="app_name">Buffet Finder</string>
+    <string name="app_name">Eaty Finder</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="web_client_id">1029982404531-senfnm9ist3chjdirgp611hmjp3fa3m1.apps.googleusercontent.com</string>
+
+    <string name="facebook_app_id">997491543706076</string>
+    <string name="facebook_sign_in_button_text_long">Sign in with Facebook</string>
+    <!--<string name="fb_login_protocol_scheme">fb997491543706076</string>-->
+
+    <string name="twitter_consumer_key">REPLACE_ME</string>
+    <string name="twitter_consumer_secret">REPLACE_ME</string>
+    <string name="twitter_sign_in_button_text_long">Sign in with Twitter</string>
+
     <string name="action_settings">Settings</string>
+
+    <string name="logout">logout</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="error_field_required">Required</string>
+
+    <string name="see_more">SEE MORE</string>
+    <string name="action_add">Add</string>
+    <string name="action_edit">Edit</string>
 </resources>
